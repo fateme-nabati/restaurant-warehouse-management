@@ -1,0 +1,24 @@
+{
+  "name": "universityـrestaurantـwarehouseـmanagement-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/universityـrestaurantـwarehouseـmanagement-app/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "universityـrestaurantـwarehouseـmanagement-app:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "universityـrestaurantـwarehouseـmanagement-app:build:development"
+        },
+        "production": {
+          "buildTarget": "universityـrestaurantـwarehouseـmanagement-app:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
