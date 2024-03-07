@@ -1,8 +1,10 @@
 // import { app } from "../../main";
 import { getAllWarehouses } from "./services/getAllWarehouses";
+import { getWarehouseById } from "./services/getWarehouseById"
 import * as express from 'express';
 const router = express.Router();
 
 router.get('/', getAllWarehouses);
+router.get('/:id', getWarehouseById);
 
 module.exports = router;
