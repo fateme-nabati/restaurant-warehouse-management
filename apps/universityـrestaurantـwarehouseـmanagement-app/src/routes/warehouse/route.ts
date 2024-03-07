@@ -1,4 +1,8 @@
-import { app } from "../../main";
+// import { app } from "../../main";
 import { getAllWarehouses } from "./services/getAllWarehouses";
+import * as express from 'express';
+const router = express.Router();
 
-app.get('/warehouses', getAllWarehouses)
+router.get('/', getAllWarehouses);
+
+module.exports = router;
