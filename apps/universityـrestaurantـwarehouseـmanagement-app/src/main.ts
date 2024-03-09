@@ -4,6 +4,7 @@ import * as path from 'path';
 const warehouseRoutes = require('./routes/warehouse/route');
 const restaurantRoutes = require('./routes/restaurant/route');
 const warehouseItemRoutes = require('./routes/warehouseItem/route');
+const foodRoutes = require('./routes/food/route');
 export const app = express();
 app.use(express.json());
 // app.use(urlencoded({ extended : true}));
@@ -14,6 +15,7 @@ console.log("start!");
 app.use('/warehouses', warehouseRoutes);
 app.use('/restaurants', restaurantRoutes);
 app.use('/warehouseItems', warehouseItemRoutes);
+app.use('/foods', foodRoutes);
 app.get('/', (req, res) => {
   res.send({
     message: 'Welcome to universityـrestaurantـwarehouseـmanagement-app!',
@@ -27,5 +29,6 @@ const server = app.listen(port, () => {
 server.on('error', console.error);
 
 // TOKEN ---> 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
+// NEW TOKEN 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
 
 
