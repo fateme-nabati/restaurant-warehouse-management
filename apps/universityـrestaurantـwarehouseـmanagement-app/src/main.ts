@@ -6,6 +6,7 @@ const restaurantRoutes = require('./routes/restaurant/route');
 const warehouseItemRoutes = require('./routes/warehouseItem/route');
 const foodRoutes = require('./routes/food/route');
 const existRoutes = require('./routes/exist/route');
+const ingredientRoutes = require('./routes/ingredient/route');
 export const app = express();
 app.use(express.json());
 // app.use(urlencoded({ extended : true}));
@@ -18,6 +19,7 @@ app.use('/restaurants', restaurantRoutes);
 app.use('/warehouseItems', warehouseItemRoutes);
 app.use('/foods', foodRoutes);
 app.use('/exists', existRoutes);
+app.use('/ingredients', ingredientRoutes);
 app.get('/', (req, res) => {
   res.send({
     message: 'Welcome to universityـrestaurantـwarehouseـmanagement-app!',
@@ -30,7 +32,6 @@ const server = app.listen(port, () => {
 });
 server.on('error', console.error);
 
-// TOKEN ---> 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
 // NEW TOKEN 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
 
 
