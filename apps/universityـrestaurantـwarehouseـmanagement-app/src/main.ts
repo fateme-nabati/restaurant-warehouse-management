@@ -9,6 +9,7 @@ const existRoutes = require('./routes/exist/route');
 const ingredientRoutes = require('./routes/ingredient/route');
 const haveRoutes = require('./routes/have/route');
 const prepareRoutes = require('./routes/prepare/route');
+const otherRoutes = require('./other functionalities/route')
 export const app = express();
 app.use(express.json());
 // app.use(urlencoded({ extended : true}));
@@ -22,6 +23,7 @@ app.use('/ingredients', ingredientRoutes);
 app.use('/exist', existRoutes);
 app.use('/have', haveRoutes);
 app.use('/prepare', prepareRoutes);
+app.use('/', otherRoutes);
 app.get('/', (req, res) => {
   res.send({
     message: 'Welcome to university restaurant warehouse management app!',

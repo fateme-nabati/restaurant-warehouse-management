@@ -1,4 +1,3 @@
-// import { app } from "../../main";
 import { getAllPrepares } from "./services/getAllPrepares";
 import { getPrepareByRestaurantId } from "./services/getPrepareByRestaurantId";
 import { getPrepareByFoodId } from "./services/getPrepareByFoodId";
