@@ -1,6 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 import express from 'express';
 import * as path from 'path';
+const userRoutes = require('./routes/user/route') 
 const warehouseRoutes = require('./routes/warehouse/route');
 const restaurantRoutes = require('./routes/restaurant/route');
 const warehouseItemRoutes = require('./routes/warehouseItem/route');
@@ -15,6 +16,7 @@ app.use(express.json());
 // app.use(urlencoded({ extended : true}));
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/users', userRoutes);
 app.use('/warehouses', warehouseRoutes);
 app.use('/restaurants', restaurantRoutes);
 app.use('/warehouseItems', warehouseItemRoutes);
