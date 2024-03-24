@@ -1,8 +1,12 @@
 import { pool } from "../../../db"
-export const createUser = (req, res) => {
-    const {  personnel_code, national_code, first_name, last_name, birth_date, phone_number } = req.body
+import bcrypt from 'bcrypt'
+const saltRounds = 10;
+export const createUser = async (req, res) => {
+    const {  personnel_code, national_code, first_name, last_name, birth_date, phone_number, password } = req.body
 
-    pool.query('INSERT INTO users (personnel_code, national_code,  first_name, last_name, birth_date, phone_number) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [personnel_code, national_code,  first_name, last_name, birth_date, phone_number], (error, results) => {
+    const hashed_password = await bcrypt.hash(password, saltRounds)
+
+    await pool.query('INSERT INTO users (personnel_code, national_code,  first_name, last_name, birth_date, phone_number, password) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [personnel_code, national_code,  first_name, last_name, birth_date, phone_number, hashed_password], (error, results) => {
       if (error) {
         throw error
       }
