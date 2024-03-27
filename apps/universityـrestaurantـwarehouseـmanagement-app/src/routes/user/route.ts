@@ -5,6 +5,7 @@ import { createUser } from "./services/createUser"
 import { updateUser } from "./services/updateUser";
 import { deleteUser } from "./services/deleteUser";
 import * as express from 'express';
+import { login } from "./services/login";
 const router = express.Router();
 
 router.get('/', getAllUsers);
@@ -12,5 +13,5 @@ router.get('/:personnel_code', getUserById);
 router.post('/', createUser);
 router.put('/:personnel_code', updateUser);
 router.delete('/:personnel_code', deleteUser);
-
+router.post('/login', login)
 module.exports = router;
