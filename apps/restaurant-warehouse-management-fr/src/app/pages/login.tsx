@@ -10,10 +10,12 @@ import {
     Group,
     Button,
   } from '@mantine/core';
-  import classes from './app.module.css';
-  import { Link } from 'react-router-dom';
+  import classes from './login.module.css';
+  import { Link, useNavigate } from 'react-router-dom';
+
   
   export function Login() {
+    const navigate = useNavigate()
     return (
     // <Router>
       <Container size={420} my={40}>
@@ -36,7 +38,7 @@ import {
               Forgot password?
             </Anchor>
           </Group>
-          <Button fullWidth mt="xl" radius="lg" color="teal">
+          <Button fullWidth mt="xl" radius="lg" color="teal" onClick={() => navigate("/items")}>
             Sign in
           </Button>
         </Paper>
