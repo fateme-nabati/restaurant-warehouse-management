@@ -11,12 +11,14 @@ import {
     Button,
   } from '@mantine/core';
   import classes from './app.module.css';
+  import { Link } from 'react-router-dom';
   
   export function Login() {
     return (
+    // <Router>
       <Container size={420} my={40}>
         <Title ta="center" className={classes.title}>
-          Welcome to university restaurant warehouse management!
+          Welcome to university restaurant warehouse management system!
         </Title>
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           Do not have an account yet?{' '}
@@ -30,7 +32,7 @@ import {
           <PasswordInput label="Password" placeholder="Your password" required mt="md" />
           <Group justify="space-between" mt="lg">
             <Checkbox label="Remember me" />
-            <Anchor component="button" size="sm">
+            <Anchor component={Link} variant="link" to="/forgetPassword" size="sm">
               Forgot password?
             </Anchor>
           </Group>
@@ -39,5 +41,7 @@ import {
           </Button>
         </Paper>
       </Container>
+    // </Router> 
+  
     );
   }
