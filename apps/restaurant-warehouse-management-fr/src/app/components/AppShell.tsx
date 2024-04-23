@@ -1,8 +1,8 @@
 // import styles from './AppShell.module.css';
-import { AppShell, Burger, Group, Skeleton } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import HeaderComponent from './HeaderComponent';
+import NavbarComponent from './NavbarComponent';
 
 // /* eslint-disable-next-line */
 // export interface AppShellProps {} 
@@ -16,21 +16,12 @@ export function AppShellComponent() {
       navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
       padding="md"
     >
-      <AppShell.Header>
-        {/* <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <MantineLogo size={30} />
-        </Group> */}
+      {/* <AppShell.Header> */}
         <HeaderComponent />
-      </AppShell.Header>
-      <AppShell.Navbar p="md">
-        Navbar
-        {Array(15)
-          .fill(0)
-          .map((_, index) => (
-            <Skeleton key={index} h={28} mt="sm" animate={false} />
-          ))}
-      </AppShell.Navbar>
+      {/* </AppShell.Header> */}
+      {/* <AppShell.Navbar p="md"> */}
+       <NavbarComponent />
+      {/* </AppShell.Navbar> */}
       <AppShell.Main>Main</AppShell.Main>
     </AppShell>
   );

@@ -1,9 +1,8 @@
 import cx from 'clsx';
-import { Autocomplete, Group, Burger, rem, Avatar, Text, Menu, UnstyledButton, useMantineTheme, Title } from '@mantine/core';
+import { Autocomplete, Group, Burger, rem, Avatar, Text, Menu, UnstyledButton, useMantineTheme, AppShell } from '@mantine/core';
 import { useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSearch, IconChevronDown, IconHeart, IconBuildingWarehouse} from '@tabler/icons-react';
-import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './HeaderComponent.module.css';
 /* eslint-disable-next-line */
 export interface HeaderComponentProps {}
@@ -38,7 +37,7 @@ function HeaderComponent(props: HeaderComponentProps) {
   ));
 
   return (
-    <header className={classes.header}>
+    <AppShell.Header className={classes.header}>
       <div className={classes.inner}>
         <Group>
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
@@ -98,7 +97,7 @@ function HeaderComponent(props: HeaderComponentProps) {
             </Menu.Dropdown>
           </Menu>
       </div>
-    </header>
+    </AppShell.Header>
   );
 }
 
