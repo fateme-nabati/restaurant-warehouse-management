@@ -1,13 +1,13 @@
 // import styles from './AppShell.module.css';
 import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import HeaderComponent from './HeaderComponent';
-import NavbarComponent from './NavbarComponent';
+import HeaderComponent from '../components/HeaderComponent';
+import NavbarComponent from '../components/NavbarComponent';
 
 /* eslint-disable-next-line */
-export interface AppShellProps {} 
+export interface DashboardProps {} 
 
-export function AppShellComponent(props: AppShellProps) {
+export function Dashboard(props: DashboardProps) {
   const [opened, { toggle }] = useDisclosure();
 
   return (

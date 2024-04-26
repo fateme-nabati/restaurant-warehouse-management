@@ -43,10 +43,10 @@ function HeaderComponent(props: HeaderComponentProps) {
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
            <IconBuildingWarehouse
                     size={48}
-                    color={"#33d17a"}
+                    color={"#008080"}
                     stroke={1.5}
                   />
-                  <Text color={"#33d17a"} visibleFrom="xs">restaurant warehouse management</Text>
+                  <Text color={"#008080"} visibleFrom="xs">restaurant warehouse management</Text>
         </Group>
 
         <Group>
