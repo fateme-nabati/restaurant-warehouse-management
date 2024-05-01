@@ -1,15 +1,15 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 import express from 'express';
 import * as path from 'path';
-const userRoutes = require('./routes/user/route') 
-const warehouseRoutes = require('./routes/warehouse/route');
-const restaurantRoutes = require('./routes/restaurant/route');
-const warehouseItemRoutes = require('./routes/warehouseItem/route');
-const foodRoutes = require('./routes/food/route');
-const existRoutes = require('./routes/exist/route');
-const ingredientRoutes = require('./routes/ingredient/route');
-const haveRoutes = require('./routes/have/route');
-const prepareRoutes = require('./routes/prepare/route');
+const userRoutes = require('./CRUD/user/route') 
+const warehouseRoutes = require('./CRUD/warehouse/route');
+const restaurantRoutes = require('./CRUD/restaurant/route');
+const warehouseItemRoutes = require('./CRUD/warehouseItem/route');
+const foodRoutes = require('./CRUD/food/route');
+const existRoutes = require('./CRUD/exist/route');
+const ingredientRoutes = require('./CRUD/ingredient/route');
+const haveRoutes = require('./CRUD/have/route');
+const prepareRoutes = require('./CRUD/prepare/route');
 const otherRoutes = require('./other functionalities/route')
 export const app = express();
 app.use(express.json());

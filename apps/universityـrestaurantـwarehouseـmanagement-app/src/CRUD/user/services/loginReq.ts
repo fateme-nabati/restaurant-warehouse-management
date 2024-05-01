@@ -1,13 +1,9 @@
 import { pool } from '../../../db';
 import bcrypt from 'bcrypt';
-export const login = async (req, res) => {
+import { login } from './login';
+export const loginReq = async (req, res) => {
   const { username, password } = req.body;
-  const personnel_code = parseInt(username)
-  // const validate_password = async (user, password) => {
-
-  //     const valid_password = await bcrypt.compare(password, user.password)
-  //     return valid_password
-  // }
+  
   let existingUser: {
     personnel_code;
     national_code;
@@ -20,18 +16,18 @@ export const login = async (req, res) => {
 
   await pool.query(
     'SELECT * FROM users WHERE personnel_code = $1',
-    [personnel_code],
+    [username],
     async (error, results) => {
 
       existingUser = results.rows[0]   
 
       error ?
-        console.log("error") : 
+        res.status(403).send("error") : 
         !existingUser ?
           res.status(403).send('Invalid username!') :     
           !await bcrypt.compare(password, existingUser.password) ?
             res.status(403).send("Invalid password!") :   
-            res.status(200).json(existingUser);
+            login(req, res, existingUser)
      
     //   console.log(
     //  `existingUser -> ${existingUser} existingUserType -> ${typeof existingUser}`
@@ -40,4 +36,4 @@ export const login = async (req, res) => {
   );
 };
 
-module.exports = { login };
+module.exports = { loginReq };
