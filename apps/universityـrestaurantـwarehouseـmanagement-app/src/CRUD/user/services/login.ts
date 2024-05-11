@@ -3,7 +3,7 @@ import {SECRET_ACCESS_TOKEN} from '../../../../config/index'
 // import {SECRET_ACCESS_TOKEN} from '/home/fateme/work/restaurant-warehouse-management/apps/.env'
 const generateAccessJWT = function (user) {
     const payload = {
-      id: user.personnel_code,
+      personnel_code : user.personnel_code,
     };
     return jwt.sign(payload, SECRET_ACCESS_TOKEN, {
       expiresIn: '20m',
@@ -20,6 +20,6 @@ const generateAccessJWT = function (user) {
   export const login = function (req, res, user) {
     const token = generateAccessJWT(user); 
     res.cookie("SessionID", token, options); // set the token to response header
-    // res.status(200).send("Successfull login!");
     res.status(200).json(user);
+    // res.status(200).send("Successfull login!");
   };

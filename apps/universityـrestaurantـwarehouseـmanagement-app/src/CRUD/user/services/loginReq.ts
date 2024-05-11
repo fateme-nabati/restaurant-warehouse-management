@@ -29,9 +29,6 @@ export const loginReq = async (req, res) => {
             res.status(403).send("Invalid password!") :   
             login(req, res, existingUser)
      
-    //   console.log(
-    //  `existingUser -> ${existingUser} existingUserType -> ${typeof existingUser}`
-    //  );
     }
   );
 };

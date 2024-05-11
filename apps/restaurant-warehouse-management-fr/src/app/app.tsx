@@ -6,6 +6,7 @@ import '@mantine/core/styles.css';
 import { Login } from './pages/login';
 import { ForgetPassword } from './pages/forgetPassword'
 import { Items } from './pages/items';
+import { Warehouse } from './pages/warehouse';
 import { Navigate, Route, Routes} from 'react-router-dom';
 
 export function App() {
@@ -15,12 +16,12 @@ export function App() {
         <Routes>
           {/* <Route path="/" element={<Navigate to="/login" />} /> */}
           <Route path="/" element={<Login />} />
-          <Route path="/forgetPassword" element={<ForgetPassword />} />
-          <Route path="/items" element={<Items />} />
+          <Route path="/ForgetPassword" element={<ForgetPassword />} />
+          <Route path="/Items" element={<Items />} />
+          <Route path="/Warehouse" element={<Warehouse />} />
         </Routes>
      
-        {/* <Login /> */}
-       {/* <ForgetPassword />  */}
+       
         {/* <NxWelcome title="restaurant-warehouse-management-fr" />  */}
     </MantineProvider>
   );
