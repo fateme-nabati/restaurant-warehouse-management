@@ -18,8 +18,9 @@ export interface WarehouseComponentProps {}
 
 interface RowData {
   name: string;
-  email: string;
-  company: string;
+  unit: string;
+  amount: string;
+  price: string;
   type: string;
 }
 
@@ -80,98 +81,114 @@ function sortData(
 const data = [
   {
     name: 'Athena Weissnat',
-    company: 'Little - Rippin',
-    email: 'Elouise.Prohaska@yahoo.com',
+    price: '10000',
+    amount: '20000',
+    unit: 'gram',
     type: 'food stuff'
   },
   {
     name: 'Deangelo Runolfsson',
-    company: 'Greenfelder - Krajcik',
-    email: 'Kadin_Trantow87@yahoo.com',
+    price: '1500',
+    amount: '10000',
+    unit: 'gram',
     type: 'food stuff'
   },
   {
     name: 'Danny Carter',
-    company: 'Kohler and Sons',
-    email: 'Marina3@hotmail.com',
+    price: '2000', 
+    amount: '11000',
+    unit: 'gram',
     type: 'food stuff'
   },
   {
     name: 'Trace Tremblay PhD',
-    company: 'Crona, Aufderhar and Senger',
-    email: 'Antonina.Pouros@yahoo.com',
+    price: '27000', 
+    amount: '130000',
+    unit: 'gram',
     type: 'food stuff'
   },
   {
     name: 'Derek Dibbert',
-    company: 'Gottlieb LLC',
-    email: 'Abagail29@hotmail.com',
+    price: '30000', 
+    amount: '250000',
+    unit: 'gram',
     type: 'food stuff'
   },
   {
     name: 'Viola Bernhard',
-    company: 'Funk, Rohan and Kreiger',
-    email: 'Jamie23@hotmail.com',
+    price: '29000', 
+    amount: '250000',
+    unit: 'piece',
     type: 'food stuff'
   },
   {
     name: 'Austin Jacobi',
-    company: 'Botsford - Corwin',
-    email: 'Genesis42@yahoo.com',
+    price: '31000', 
+    amount: '250000',
+    unit: 'piece',
     type: 'food stuff'
   },
   {
     name: 'Hershel Mosciski',
-    company: 'Okuneva, Farrell and Kilback',
-    email: 'Idella.Stehr28@yahoo.com',
+    price: '35000', 
+    amount: '3000000',
+    unit: 'piece',
     type: 'dish side'
   },
   {
     name: 'Mylene Ebert',
-    company: 'Kirlin and Sons',
-    email: 'Hildegard17@hotmail.com',
+    price: '4000', 
+    amount: '3000000',
+    unit: 'piece',
     type: 'dish side'
   },
   {
     name: 'Lou Trantow',
-    company: 'Parisian - Lemke',
-    email: 'Hillard.Barrows1@hotmail.com',
+    price: '42000', 
+    amount: '3000000',
+    unit: 'slice',
     type: 'dish side'
   },
   {
     name: 'Dariana Weimann',
-    company: 'Schowalter - Donnelly',
-    email: 'Colleen80@gmail.com',
+    price: '45000', 
+    amount: '3000000',
+    unit: 'slice',
     type: 'dish side'
   },
   {
     name: 'Dr. Christy Herman',
-    company: 'VonRueden - Labadie',
-    email: 'Lilyan98@gmail.com',
+    price: '12000', 
+    amount: '3000000',
+    unit: 'slice',
     type: 'dish side'
   },
   {
     name: 'Katelin Schuster',
-    company: 'Jacobson - Smitham',
-    email: 'Erich_Brekke76@gmail.com',
+    price: '18000',
+    amount: '3000000',
+    unit: 'slice',
     type: 'dish side'
   },
   {
     name: 'Melyna Macejkovic',
-    company: 'Schuster LLC',
-    email: 'Kylee4@yahoo.com',
+    price: '3500', 
+    amount: '3500000',
+    unit: 'piece',
     type: 'dish side'
   },
   {
     name: 'Pinkie Rice',
-    company: 'Wolf, Trantow and Zulauf',
-    email: 'Fiona.Kutch@hotmail.com',
+    price: '5000', 
+    amount: '4000000',
+    unit: 'gram',
     type: 'dish side'
   },
   {
     name: 'Brain Kreiger',
-    company: 'Lueilwitz Group',
-    email: 'Rico98@hotmail.com',
+    price: '21000', 
+    amount: '4000000',
+    unit: 'gram',
     type: 'dish side'
   },
 ];
@@ -198,8 +215,9 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
-      <Table.Td>{row.email}</Table.Td>
-      <Table.Td>{row.company}</Table.Td>
+      <Table.Td>{row.amount}</Table.Td>
+      <Table.Td>{row.unit}</Table.Td>
+      <Table.Td>{row.price}</Table.Td>
       <Table.Td>{row.type}</Table.Td>
     </Table.Tr>
   ));
@@ -222,20 +240,27 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
               onSort={() => setSorting('name')}
             >
               Name
+            </Th> 
+            <Th
+              sorted={sortBy === 'amount'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('amount')}
+            >
+              amount
             </Th>
             <Th
-              sorted={sortBy === 'email'}
+              sorted={sortBy === 'unit'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('email')}
+              onSort={() => setSorting('unit')}
             >
-              Email
+              unit
             </Th>
             <Th
-              sorted={sortBy === 'company'}
+              sorted={sortBy === 'price'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('company')}
+              onSort={() => setSorting('price')}
             >
-              Company
+              price
             </Th> 
             <Th
               sorted={sortBy === 'type'}
@@ -263,6 +288,5 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
     </ScrollArea>
   );
 }
-
 
 export default WarehouseComponent;

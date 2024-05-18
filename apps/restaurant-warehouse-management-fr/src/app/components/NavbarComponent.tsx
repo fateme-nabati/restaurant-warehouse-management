@@ -54,22 +54,22 @@ export function NavbarComponent(props: NavbarComponentProps) {
     // }}>
 
     // <item.icon className={classes.linkIcon} stroke={1.5} />
-    <span>{item.label}</span>
-    </a>
+    // <span>{item.label}</span>
+    // </a>
 
-    <Link
+    <NavLink
       className={classes.link}
-      // active={item.label === active || undefined}
-      to={item.link}
+      active={item.label === active || undefined}
+      // to={item.link}
       key={item.label}
-      // label={item.label}
-      // leftSection={<item.icon stroke={1.5} />}
+      label={item.label}
+      leftSection={<item.icon stroke={1.5} />}
       onClick={() => {
         setActive(item.label);
       }}
-    >
-      {item.label}
-    </Link>
+    
+      
+    />
   ));
 
   return (

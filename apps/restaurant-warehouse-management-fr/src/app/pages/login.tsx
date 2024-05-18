@@ -56,7 +56,7 @@ export function Login() {
           mt="xl"
           radius="lg"
           color="teal"
-          onClick={() => navigate('/Warehouse')}
+          onClick={() => navigate('/Items')}
         >
           Sign in
         </Button>
