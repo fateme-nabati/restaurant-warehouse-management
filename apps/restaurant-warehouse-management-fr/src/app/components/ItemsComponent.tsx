@@ -14,6 +14,7 @@ import {
   Box,
   Select
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './ItemsComponent.module.css';
 
@@ -186,21 +187,22 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
+  // const [opened, { open, close }] = useDisclosure(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [itemName, setItemName] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [category, setCategory] = useState(''); // Add category selection
+  // const [itemName, setItemName] = useState('');
+  // const [quantity, setQuantity] = useState(0);
+  // const [category, setCategory] = useState(''); // Add category selection
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleAddItem = () => {
-    // Implement logic to add item to warehouse with itemName, quantity, and category
-    handleCloseModal();
-    setItemName(''); // Reset form after adding
-    setQuantity(0);
-    setCategory('');
-  };
+  // const handleAddItem = () => {
+  //   // Implement logic to add item to warehouse with itemName, quantity, and category
+  //   handleCloseModal();
+  //   setItemName(''); // Reset form after adding
+  //   setQuantity(0);
+  //   setCategory('');
+  // };
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
@@ -226,25 +228,32 @@ export function ItemsComponent(props: ItemsComponentProps) {
   return (
     <ScrollArea>
       {/* <Group justify='space-between' mt="md" grow> */}
-      <Modal opened={isModalOpen} onClose={handleCloseModal}>
+      {/* <Modal opened={isModalOpen} onClose={handleCloseModal}>
         <Box style={{ display: 'flex', flexDirection: 'column' }}>
           <TextInput label="Item Name" placeholder="Enter item name" value={itemName} onChange={(e) => setItemName(e.target.value)} />
           <TextInput label="Quantity" placeholder="Enter quantity" type="number" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))} />
-          <Select label="Category" placeholder="Select category" value={category} onChange={() => setCategory('')}>
-            <option value="electronics">Electronics</option>
-            <option value="clothing">Clothing</option>
+          <Select label="Category" placeholder="Select category" value={category} onChange={() => setCategory('')}> */}
+            {/* <option value="electronics">Electronics</option>
+            <option value="clothing">Clothing</option> */}
             {/* Add more category options here */}
-          </Select>
+          {/* </Select>
           <Group>
             <Button variant="outline" onClick={handleCloseModal}>
               Cancel
-            </Button>
-            <Button variant="filled" onClick={handleAddItem}>
+            </Button> */}
+            {/* <Button variant="filled" onClick={handleAddItem}>
               Add
             </Button>
           </Group>
         </Box>
-      </Modal>
+      </Modal> */}
+
+
+    
+      
+      {/* <Button onClick={open}>Open modal</Button> */}
+    
+  
       <Box style={{ display: 'flex', width: '100%' }}>
       <TextInput
         placeholder="Search an item"
@@ -255,7 +264,14 @@ export function ItemsComponent(props: ItemsComponentProps) {
         style={{ width: '85%' }}
       />
       
-      <Button variant="filled" color="green" size="md-compact" ml={50} leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} onClick={handleOpenModal}/>}>Add</Button>
+      <Button variant="filled" color="green" size="md-compact" ml={50}  leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />} onClick={handleOpenModal} >Add</Button>
+
+      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Authentication">
+      {
+        <Button>hello</Button>
+      }
+      </Modal>
+
       </Box>
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
