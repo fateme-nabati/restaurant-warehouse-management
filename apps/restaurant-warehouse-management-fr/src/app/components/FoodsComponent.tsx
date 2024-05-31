@@ -12,26 +12,18 @@ import {
   Button,
   Modal,
   Box,
-  Select,
   Space,
-  // MultiSelect,
-  // Combobox,
-  // ComboboxInput,
-  // ComboboxItem,
-  // ComboboxList
+ 
 } from '@mantine/core';
-// import { useDisclosure } from '@mantine/hooks';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
-import classes from './ItemsComponent.module.css';
+import classes from './FoodsComponent.module.css';
 
 /* eslint-disable-next-line */
-export interface ItemsComponentProps {}
+export interface FoodsComponentProps {}
 
 interface RowData {
   name: string;
-  unit: string;
   price: string;
-  type: string;
 }
 
 interface ThProps {
@@ -90,104 +82,72 @@ function sortData(
 
 const data = [
   {
-    name: 'Athena Weissnat',
+    name: 'Ghorme sabzi',
     price: '10000',
-    unit: 'Elouis',
-    type: 'food stuff'
   },
   {
-    name: 'Deangelo Runolfsson',
+    name: 'Gheyme',
     price: '1500',
-    unit: 'Kadin_Trantow87@yahoo.com',
-    type: 'food stuff'
   },
   {
-    name: 'Danny Carter',
+    name: 'Chicken',
     price: '2000', 
-    unit: 'Marina3@hotmail.com',
-    type: 'food stuff'
   },
   {
-    name: 'Trace Tremblay PhD',
+    name: 'Fish',
     price: '27000', 
-    unit: 'Antonina.Pouros@yahoo.com',
-    type: 'food stuff'
   },
   {
-    name: 'Derek Dibbert',
+    name: 'Falafel',
     price: '30000', 
-    unit: 'Abagail29@hotmail.com',
-    type: 'food stuff'
   },
   {
     name: 'Viola Bernhard',
     price: '29000', 
-    unit: 'Jamie23@hotmail.com',
-    type: 'food stuff'
   },
   {
     name: 'Austin Jacobi',
     price: '31000', 
-    unit: 'Genesis42@yahoo.com',
-    type: 'food stuff'
   },
   {
     name: 'Hershel Mosciski',
     price: '35000', 
-    unit: 'Idella.Stehr28@yahoo.com',
-    type: 'dish side'
   },
   {
     name: 'Mylene Ebert',
     price: '4000', 
-    unit: 'Hildegard17@hotmail.com',
-    type: 'dish side'
   },
   {
     name: 'Lou Trantow',
     price: '42000', 
-    unit: 'Hillard.Barrows1@hotmail.com',
-    type: 'dish side'
   },
   {
     name: 'Dariana Weimann',
     price: '45000', 
-    unit: 'Colleen80@gmail.com',
-    type: 'dish side'
   },
   {
     name: 'Dr. Christy Herman',
     price: '12000', 
-    unit: 'Lilyan98@gmail.com',
-    type: 'dish side'
   },
   {
     name: 'Katelin Schuster',
     price: '18000',
-    unit: 'Erich_Brekke76@gmail.com',
-    type: 'dish side'
   },
   {
     name: 'Melyna Macejkovic',
     price: '3500', 
-    unit: 'Kylee4@yahoo.com',
-    type: 'dish side'
   },
   {
     name: 'Pinkie Rice',
     price: '5000', 
-    unit: 'Fiona.Kutch@hotmail.com',
-    type: 'dish side'
   },
   {
     name: 'Brain Kreiger',
     price: '21000', 
-    unit: 'Rico98@hotmail.com',
-    type: 'dish side'
   },
 ];
 
-export function ItemsComponent(props: ItemsComponentProps) {
+export function FoodsComponent(props: FoodsComponentProps) {
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
@@ -195,21 +155,16 @@ export function ItemsComponent(props: ItemsComponentProps) {
 
   // const [opened, { open, close }] = useDisclosure(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [itemName, setItemName] = useState('');
-  const [unit, setUnit] = useState <string | null>(''); // Add unit selection
+  const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState(0);
-  const [type, setType] = useState <string | null>(''); // Add type selection
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleAddItem = () => {
-    // Implement logic to add item to warehouse with itemName, quantity, and category
     handleCloseModal();
-    setItemName(''); // Reset form after adding
-    setUnit('');
+    setFoodName(''); // Reset form after adding
     setPrice(0);
-    setType('');
   };
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -227,19 +182,16 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
-      <Table.Td>{row.unit}</Table.Td>
       <Table.Td>{row.price}</Table.Td>
-      <Table.Td>{row.type}</Table.Td>
     </Table.Tr>
   ));
 
   return (
     <ScrollArea>
-      {/* <Group justify='space-between' mt="md" grow> */}
      
       <Box style={{ display: 'flex', width: '100%' }}>
       <TextInput
-        placeholder="Search an item"
+        placeholder="Search a food"
         mb="md"
         leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
         value={search}
@@ -249,17 +201,12 @@ export function ItemsComponent(props: ItemsComponentProps) {
       
       <Button variant="filled" color="green" size="md-compact" ml={50}  leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />} onClick={handleOpenModal} >Add</Button>
 
-      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add an item">
+      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add a food">
         <Box style={{ display: 'flex', flexDirection: 'column' }}>
-          <TextInput label="Item Name" placeholder="Enter item name" value={itemName} onChange={(e) => setItemName(e.target.value)} />
- 
-
-          <Select label="Unit" placeholder="Select unit" data={['Gram', 'Kilogram','Peice', 'Slice', 'Pakage', 'Bottle']} value={unit} onChange={(_value, option) => setUnit(_value)}
-          />          
-          <TextInput label="Price per unit" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
-
-          <Select label="Type" placeholder="Select item type" data={['Food stuff', 'Dish side']} value={type} onChange={(_value, option) => setType(_value)}
-          />          
+          <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+           
+          <TextInput label="Price per plate" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
+    
           <Space h="md"/>
           <Group justify='center'grow>
             <Button variant="outline" onClick={handleCloseModal}>
@@ -284,13 +231,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
             >
               Name
             </Th>
-            <Th
-              sorted={sortBy === 'unit'}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting('unit')}
-            >
-              unit
-            </Th>
+           
             <Th
               sorted={sortBy === 'price'}
               reversed={reverseSortDirection}
@@ -298,13 +239,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
             >
               price
             </Th> 
-            <Th
-              sorted={sortBy === 'type'}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting('type')}
-            >
-              type
-            </Th>
+           
           </Table.Tr>
         </Table.Tbody>
         <Table.Tbody>
@@ -325,4 +260,4 @@ export function ItemsComponent(props: ItemsComponentProps) {
   );
 }
 
-export default ItemsComponent;
+export default FoodsComponent;
