@@ -10,7 +10,6 @@ import {
   Group,
   Button,
 } from '@mantine/core';
-import classes from './login.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 export function Login() {
@@ -18,7 +17,7 @@ export function Login() {
   return (
     // <Router>
     <Container size={420} my={40}>
-      <Title ta="center" className={classes.title}>
+      <Title ta="center">
         Welcome to university restaurant warehouse management system!
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
@@ -56,7 +55,7 @@ export function Login() {
           mt="xl"
           radius="lg"
           color="teal"
-          onClick={() => navigate('/Foods')}
+          onClick={() => navigate('/Restaurant')}
         >
           Sign in
         </Button>

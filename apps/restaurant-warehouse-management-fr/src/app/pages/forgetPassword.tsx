@@ -13,12 +13,12 @@ import {
   } from '@mantine/core';
   import { IconArrowLeft } from '@tabler/icons-react';
   import { Link } from 'react-router-dom';
-  import classes from './ForgetPassword.module.css';
+  // import classes from './ForgetPassword.module.css';
   
   export function ForgetPassword() {
     return (
       <Container size={460} my={30}>
-        <Title className={classes.title} ta="center">
+        <Title ta="center">
           Forgot your password?
         </Title>
         <Text c="dimmed" fz="sm" ta="center">
@@ -27,14 +27,14 @@ import {
   
         <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
           <TextInput label="Your phone number" placeholder="09xx xxx xxxx" required />
-          <Group justify="space-between" mt="lg" className={classes.controls}>
-            <Anchor c="dimmed" size="sm" className={classes.control} component={Link} to='/'>
+          <Group justify="space-between" mt="lg">
+            <Anchor c="dimmed" size="sm" component={Link} to='/'>
               <Center inline>
                 <IconArrowLeft style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
                 <Box ml={5}>Back to the login page</Box>
               </Center>
             </Anchor>
-            <Button className={classes.control} radius={'lg'}>Reset password</Button>
+            <Button radius={'lg'}>Reset password</Button>
           </Group>
         </Paper>
       </Container>

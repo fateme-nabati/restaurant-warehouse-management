@@ -3,12 +3,12 @@ import { AppShell } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import HeaderComponent from '../components/HeaderComponent';
 import NavbarComponent from '../components/NavbarComponent';
-import ItemsComponent from '../components/ItemsComponent';
+import RestaurantComponent from '../components/RestaurantComponent';
 
 /* eslint-disable-next-line */
-export interface ItemsProps {} 
+export interface RestaurantProps {} 
 
-export function Items(props: ItemsProps) {
+export function Restaurant(props: RestaurantProps) {
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -20,7 +20,7 @@ export function Items(props: ItemsProps) {
       <HeaderComponent />
       <NavbarComponent />
       <AppShell.Main>
-        <ItemsComponent />
+        <RestaurantComponent />
       </AppShell.Main>
     </AppShell>
   );
