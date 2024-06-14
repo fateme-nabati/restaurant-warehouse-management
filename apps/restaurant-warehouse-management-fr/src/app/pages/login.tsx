@@ -11,7 +11,7 @@ import {
   Button,
 } from '@mantine/core';
 import { Link, useNavigate } from 'react-router-dom';
-
+// import { setActive } from '../components/NavbarComponent'
 export function Login() {
   const navigate = useNavigate();
   return (
@@ -55,7 +55,10 @@ export function Login() {
           mt="xl"
           radius="lg"
           color="teal"
-          onClick={() => navigate('/Restaurant')}
+          onClick={() => {
+            navigate('/Restaurant')
+            // setActive('/Restaurant')
+          }}
         >
           Sign in
         </Button>

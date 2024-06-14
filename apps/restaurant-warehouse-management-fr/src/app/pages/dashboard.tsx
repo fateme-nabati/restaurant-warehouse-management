@@ -18,7 +18,7 @@ export function Dashboard(props: DashboardProps) {
     >
       
       <HeaderComponent /> 
-      <NavbarComponent /> 
+      <NavbarComponent activeLabel='Dashboard'/> 
       <AppShell.Main>This Is Dashboard Page</AppShell.Main>
 
     </AppShell>

@@ -18,7 +18,7 @@ export function Items(props: ItemsProps) {
       padding="md"
     >
       <HeaderComponent />
-      <NavbarComponent />
+      <NavbarComponent activeLabel='Items'/>
       <AppShell.Main>
         <ItemsComponent />
       </AppShell.Main>

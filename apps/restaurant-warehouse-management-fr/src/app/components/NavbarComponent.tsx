@@ -14,11 +14,13 @@ import {
   IconLogout,
   IconDashboard,
 } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './NavbarComponent.module.css';
 /* eslint-disable-next-line */
-export interface NavbarComponentProps {}
+export interface NavbarComponentProps {
+  activeLabel: string;
+}
 
 const data = [
   { link: '/Dashboard', label: 'Dashboard', icon: IconDashboard },
@@ -31,7 +33,7 @@ const data = [
 ];
 
 export function NavbarComponent(props: NavbarComponentProps) {
-  const [active, setActive] = useState('Dashboard');
+  const [active, setActive] = useState(props.activeLabel);
   // const navigate = useNavigate();
   const links = data.map((item) => (
     // <Link className={classes.link}
@@ -75,8 +77,10 @@ export function NavbarComponent(props: NavbarComponentProps) {
     
       
     />
-  ));
+  )
+  );
 
+  // export const returnSetActive = () => {return setActive}
   return (
     <AppShell.Navbar className={classes.navbar} p="md">
       <div className={classes.navbarMain}>

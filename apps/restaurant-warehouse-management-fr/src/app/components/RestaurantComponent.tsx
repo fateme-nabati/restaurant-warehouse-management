@@ -1,26 +1,30 @@
 import { useState } from 'react';
 import {
-  Table,
   ScrollArea,
-  UnstyledButton,
+  // UnstyledButton,
   Group,
   Text,
-  Center,
+  // Center,
   TextInput,
   rem,
-  keys,
+  // keys,
   Button,
   Modal,
   Box,
   Space,
   Select,
-  useMantineTheme,
+  // useMantineTheme,
   Card,
   SimpleGrid,
   Anchor,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates'
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
+import { 
+  // IconSelector, 
+  // IconChevronDown, 
+  // IconChevronUp, 
+  // IconSearch, 
+  IconPlus } from '@tabler/icons-react';
 import { Link } from 'react-router-dom'
 import classes from './RestaurantComponent.module.css';
 
@@ -32,30 +36,30 @@ interface RowData {
   foods: Array<string>;
 }
 
-interface ThProps {
-  children: React.ReactNode;
-  reversed: boolean;
-  sorted: boolean;
-  onSort(): void;
-}
+// interface ThProps {
+//   children: React.ReactNode;
+//   reversed: boolean;
+//   sorted: boolean;
+//   onSort(): void;
+// }
 
-function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
-  return (
-    <Table.Th className={classes.th}>
-      <UnstyledButton onClick={onSort} className={classes.control}>
-        <Group justify="space-between">
-          <Text fw={500} fz="sm">
-            {children}
-          </Text>
-          <Center className={classes.icon}>
-            <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-          </Center>
-        </Group>
-      </UnstyledButton>
-    </Table.Th>
-  );
-}
+// function Th({ children, reversed, sorted, onSort }: ThProps) {
+//   const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+//   return (
+//     <Table.Th className={classes.th}>
+//       <UnstyledButton onClick={onSort} className={classes.control}>
+//         <Group justify="space-between">
+//           <Text fw={500} fz="sm">
+//             {children}
+//           </Text>
+//           <Center className={classes.icon}>
+//             <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+//           </Center>
+//         </Group>
+//       </UnstyledButton>
+//     </Table.Th>
+//   );
+// }
 
 
 
@@ -146,7 +150,7 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
 
 
 
-  const theme = useMantineTheme();
+  // const theme = useMantineTheme();
   const days = data.map((day) => (
     <Card key={day.date} shadow="md" radius="md" className={classes.card} padding="xl">
       <Anchor component={Link} variant="link" to='/dateInfo' fz="lg" fw={500} className={classes.cardDate}mt="md" ta="left" c="pink">
@@ -207,4 +211,5 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
 }
 
 export default RestaurantComponent;
+
 

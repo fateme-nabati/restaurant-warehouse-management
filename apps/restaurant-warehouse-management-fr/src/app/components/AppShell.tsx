@@ -20,7 +20,7 @@ export function AppShellComponent(props: AppShellProps) {
         <HeaderComponent />
       {/* </AppShell.Header> */}
       {/* <AppShell.Navbar p="md"> */}
-       <NavbarComponent />
+       <NavbarComponent activeLabel='Dashboard'/>
       {/* </AppShell.Navbar> */}
       <AppShell.Main>Main</AppShell.Main>
     </AppShell>
