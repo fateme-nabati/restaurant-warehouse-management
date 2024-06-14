@@ -129,6 +129,8 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
   const [vade, setVade] = useState <string | null>(''); 
   const [reservedNo, setReservedNo] = useState(0);
   const [dailyBoughtNo, setDailyBoughtNo] = useState(0);
+  const [cookedNo, setCookedNo] = useState(0);
+  const [deliveredNo, setDeliveredNo] = useState(0);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -139,6 +141,8 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
     setVade('');
     setReservedNo(0);
     setDailyBoughtNo(0);
+    setCookedNo(0);
+    setDeliveredNo(0);
   };
 
 
@@ -146,12 +150,10 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
   const theme = useMantineTheme();
   const days = data.map((day) => (
     <Card key={day.date} shadow="md" radius="md" className={classes.card} padding="xl">
-       <Anchor component="button" fz="lg" fw={500} className={classes.cardDate}mt="md" ta="left" c="pink">
+      <Anchor component="button" fz="lg" fw={500} className={classes.cardDate}mt="md" ta="left" c="pink">
             {day.date}
-       </Anchor>
-      {/* <Text fz="lg" fw={500} className={classes.cardDate} mt="md">
-        {day.date}
-      </Text> */}
+      </Anchor>
+      
       <Text fz="sm" c="dimmed" mt="sm">
         {day.foods.join()}
       </Text>
@@ -169,14 +171,17 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
        
       <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add information about new day">
         <Box style={{ display: 'flex', flexDirection: 'column' }}>
-          <DateInput size="xs" label="Date" placeholder="Enter date" value={date} onChange={setDate}/>
+          <DateInput size="xs" clearable defaultValue={new Date()} label="Date" placeholder="Enter date" value={date} onChange={(_value) => setDate(_value)} />
 
-           <Select label="Vade" placeholder="Select vade" data={['Break fast', 'Launch','Dinner']} value={vade} onChange={(_value, option) => setVade(_value)}
-          />          
-          <TextInput label="Number of reserved" placeholder="Enter number of reserved" type="number" value={reservedNo} onChange={(e) => setReservedNo(parseInt(e.target.value))} /> 
+           <Select label="Vade" placeholder="Select vade" data={['Break fast', 'Launch','Dinner']} value={vade} onChange={(_value, option) => setVade(_value)} />    
 
-          <TextInput label="Number of daily bought" placeholder="Enter number of daily bought" type="number" value={dailyBoughtNo} onChange={(e) => setDailyBoughtNo(parseInt(e.target.value))} />
-    
+          <TextInput label="Number of reserved foods" placeholder="Enter number of reserved foods" type="number" value={reservedNo} onChange={(e) => setReservedNo(parseInt(e.target.value))} /> 
+
+          <TextInput label="Number of daily bought foods" placeholder="Enter number of daily bought foods" type="number" value={dailyBoughtNo} onChange={(e) => setDailyBoughtNo(parseInt(e.target.value))} />
+
+          <TextInput label="Number of cooked foods" placeholder="Enter number of cooked foods" type="number" value={cookedNo} onChange={(e) => setCookedNo(parseInt(e.target.value))} /> 
+
+          <TextInput label="Number of delivered foods" placeholder="Enter number of delivered foods" type="number" value={deliveredNo} onChange={(e) => setDeliveredNo(parseInt(e.target.value))} /> 
           <Space h="md"/>
           <Group justify='center'grow>
             <Button variant="outline" onClick={handleCloseModal}>
