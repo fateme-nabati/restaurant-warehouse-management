@@ -17,9 +17,11 @@ import {
   useMantineTheme,
   Card,
   SimpleGrid,
-  Anchor
+  Anchor,
+ 
  
 } from '@mantine/core';
+import { DateInput } from '@mantine/dates'
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './RestaurantComponent.module.css';
 
@@ -58,71 +60,64 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 
 
 
-const data = [
+const data : RowData[] = [
+  {
+    date: 'saturday, June 1, 2024',
+    foods: ['Gheyme', 'Kabab'],
+  },
+  {
+    date: 'sunday, June 2, 2024',
+    foods: ['Ghorme sabzi', 'Cholo goosht'],
+  },
+  {
+    date: 'monday, June 3, 2024',
+    foods: ['Morgh', 'Khoresht khalal'], 
+  },
+  {
+    date: 'tuesday, June 4, 2024',
+    foods: ['Mahi', 'Falafel'], 
+  },
+  {
+    date: 'wednsday, June 5, 2024',
+    foods: ['Khoresht bademjoon', 'Makarooni'], 
+  },
+  {
+    date: 'thursday, June 6, 2024',
+    foods: ['10000', '7000'],
+  },
+  {
+    date: 'friday, June 7, 2024',
+    foods: ['10000', '7000'],
+  },
+  {
+    date: 'saturday, June 8, 2024',
+    foods: ['10000', '7000'],
+  },
+  {
+    date: 'sunday, June 9, 2024',
+    foods: ['10000', '7000'],
+  },
+  {
+    date: 'monday, June 10, 2024',
+    foods: ['10000', '7000'],
+  },
   {
     date: 'saturday, June 1, 2024',
     foods: ['10000', '7000'],
   },
   {
-    date: 'Gheyme',
-    foods: ['10000', '3000'],
+    date: 'saturday, June 1, 2024',
+    foods: ['10000', '7000'],
   },
   {
-    date: 'Chicken',
-    foods: ['2000'], 
+    date: 'saturday, June 1, 2024',
+    foods: ['10000', '7000'],
   },
   {
-    date: 'Fish',
-    foods: ['27000'], 
+    date: 'saturday, June 1, 2024',
+    foods: ['10000', '7000'],
   },
-  {
-    date: 'Falafel',
-    foods: ['30000'], 
-  },
-  {
-    date: 'Viola Bernhard',
-    foods: ['29000'], 
-  },
-  {
-    date: 'Austin Jacobi',
-    foods: ['31000'], 
-  },
-  {
-    date: 'Hershel Mosciski',
-    foods: ['35000'], 
-  },
-  {
-    date: 'Mylene Ebert',
-    foods: ['4000'], 
-  },
-  {
-    name: 'Lou Trantow',
-    price: '42000', 
-  },
-  {
-    name: 'Dariana Weimann',
-    price: '45000', 
-  },
-  {
-    name: 'Dr. Christy Herman',
-    price: '12000', 
-  },
-  {
-    name: 'Katelin Schuster',
-    price: '18000',
-  },
-  {
-    name: 'Melyna Macejkovic',
-    price: '3500', 
-  },
-  {
-    name: 'Pinkie Rice',
-    price: '5000', 
-  },
-  {
-    name: 'Brain Kreiger',
-    price: '21000', 
-  },
+ 
 ];
 
 export function RestaurantComponent(props: RestaurantComponentProps) {
@@ -130,16 +125,20 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
   // const [opened, { open, close }] = useDisclosure(false);
   const [restaurantName, setRestaurantName] = useState <string | null>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [foodName, setFoodName] = useState('');
-  const [price, setPrice] = useState(0);
+  const [date, setDate] = useState <Date | null>(null);
+  const [vade, setVade] = useState <string | null>(''); 
+  const [reservedNo, setReservedNo] = useState(0);
+  const [dailyBoughtNo, setDailyBoughtNo] = useState(0);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleAddItem = () => {
     handleCloseModal();
-    setFoodName(''); // Reset form after adding
-    setPrice(0);
+    setDate(null); 
+    setVade('');
+    setReservedNo(0);
+    setDailyBoughtNo(0);
   };
 
 
@@ -154,7 +153,7 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
         {day.date}
       </Text> */}
       <Text fz="sm" c="dimmed" mt="sm">
-        {day.foods}
+        {day.foods.join()}
       </Text>
     </Card>
   ));
@@ -168,11 +167,15 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
      
       <Button variant="filled" color="green" size="md-compact" ml={50}  leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />} onClick={handleOpenModal} >Add</Button>
        
-      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add a food">
+      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add information about new day">
         <Box style={{ display: 'flex', flexDirection: 'column' }}>
-          <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
-           
-          <TextInput label="Price per plate" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
+          <DateInput size="xs" label="Date" placeholder="Enter date" value={date} onChange={setDate}/>
+
+           <Select label="Vade" placeholder="Select vade" data={['Break fast', 'Launch','Dinner']} value={vade} onChange={(_value, option) => setVade(_value)}
+          />          
+          <TextInput label="Number of reserved" placeholder="Enter number of reserved" type="number" value={reservedNo} onChange={(e) => setReservedNo(parseInt(e.target.value))} /> 
+
+          <TextInput label="Number of daily bought" placeholder="Enter number of daily bought" type="number" value={dailyBoughtNo} onChange={(e) => setDailyBoughtNo(parseInt(e.target.value))} />
     
           <Space h="md"/>
           <Group justify='center'grow>
