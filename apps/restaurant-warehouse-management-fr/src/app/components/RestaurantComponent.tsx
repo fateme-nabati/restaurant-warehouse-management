@@ -18,11 +18,10 @@ import {
   Card,
   SimpleGrid,
   Anchor,
- 
- 
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates'
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
+import { Link } from 'react-router-dom'
 import classes from './RestaurantComponent.module.css';
 
 /* eslint-disable-next-line */
@@ -150,7 +149,7 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
   const theme = useMantineTheme();
   const days = data.map((day) => (
     <Card key={day.date} shadow="md" radius="md" className={classes.card} padding="xl">
-      <Anchor component="button" fz="lg" fw={500} className={classes.cardDate}mt="md" ta="left" c="pink">
+      <Anchor component={Link} variant="link" to='/dateInfo' fz="lg" fw={500} className={classes.cardDate}mt="md" ta="left" c="pink">
             {day.date}
       </Anchor>
       

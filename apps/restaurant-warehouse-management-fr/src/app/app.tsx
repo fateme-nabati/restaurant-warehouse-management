@@ -5,6 +5,7 @@ import '@mantine/core/styles.css';
 // import NxWelcome from './nx-welcome';
 import { Login } from './pages/login';
 import { ForgetPassword } from './pages/forgetPassword'
+import { Dashboard } from './pages/dashboard';
 import { Items } from './pages/items';
 import { Warehouse } from './pages/warehouse';
 import { Foods } from './pages/foods'
@@ -18,6 +19,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/ForgetPassword" element={<ForgetPassword />} />
+          <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/Items" element={<Items />} />
           <Route path="/Warehouse" element={<Warehouse />} />
           <Route path="/Foods" element={<Foods />} />
