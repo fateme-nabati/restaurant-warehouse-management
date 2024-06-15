@@ -153,7 +153,6 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
-  // const [opened, { open, close }] = useDisclosure(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState(0);

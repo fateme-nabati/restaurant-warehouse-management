@@ -9,8 +9,12 @@ import {
   TextInput,
   rem,
   keys,
+  Box,
+  Button,
+  Modal,
+  Space
 } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './WarehouseComponent.module.css';
 
 /* eslint-disable-next-line */
@@ -195,9 +199,23 @@ const data = [
 
 export function WarehouseComponent(props: WarehouseComponentProps) {
   const [search, setSearch] = useState('');
+  const [modalSearch, setModalSearch] = useState('');
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [foodName, setFoodName] = useState('');
+  const [price, setPrice] = useState(0);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleAddItem = () => {
+    handleCloseModal();
+    setFoodName(''); 
+    setPrice(0);
+  };
 
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -224,13 +242,47 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
 
   return (
     <ScrollArea>
+      <Box style={{ display: 'flex', width: '100%' }}>
       <TextInput
         placeholder="Search an item"
         mb="md"
         leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
         value={search}
         onChange={handleSearchChange}
-      />
+        style={{ width: '85%' }}
+      />      
+      <Button variant="filled" color="green" size="md-compact" ml={50}  leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />} onClick={handleOpenModal} >Add</Button>
+
+      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add an item to warehouse">
+        <Box style={{ display: 'flex', flexDirection: 'column' }}> 
+
+          <TextInput
+          placeholder="Search an item"
+          mb="md"
+          leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
+          value={search}
+          onChange={handleSearchChange}
+          style={{ width: '85%' }}
+        />      
+
+          <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+           
+          <TextInput label="Price per plate" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
+    
+          <Space h="md"/>
+          <Group justify='center'grow>
+            <Button variant="outline" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            <Button variant="filled" onClick={handleAddItem}>
+              Add
+            </Button>
+          </Group>
+
+        </Box>
+      </Modal>
+      </Box>
+
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
           <Table.Tr>
