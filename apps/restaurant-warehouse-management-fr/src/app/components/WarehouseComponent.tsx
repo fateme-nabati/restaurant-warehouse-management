@@ -12,11 +12,12 @@ import {
   Box,
   Button,
   Modal,
+  MultiSelect,
   Space
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './WarehouseComponent.module.css';
-
+import {data as allData} from './ItemsComponent' ;
 /* eslint-disable-next-line */
 export interface WarehouseComponentProps {}
 
@@ -52,7 +53,16 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
     </Table.Th>
   );
 }
-
+function loadItem(name: string) {
+  const item = allData.filter((item) => item.name === name);
+  // setItemName(name);
+  return (
+    <Text>
+      `name : ${item[0].name}`
+      `type : ${item[0].type}`
+    </Text>
+  );
+}
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
@@ -199,12 +209,13 @@ const data = [
 
 export function WarehouseComponent(props: WarehouseComponentProps) {
   const [search, setSearch] = useState('');
-  const [modalSearch, setModalSearch] = useState('');
+  // const [modalSearch, setModalSearch] = useState('');
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemName, setItemName] = useState('');
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState(0);
 
@@ -213,6 +224,7 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
 
   const handleAddItem = () => {
     handleCloseModal();
+    setItemName('');
     setFoodName(''); 
     setPrice(0);
   };
@@ -256,18 +268,28 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
       <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add an item to warehouse">
         <Box style={{ display: 'flex', flexDirection: 'column' }}> 
 
-          <TextInput
+          {/* <TextInput
           placeholder="Search an item"
           mb="md"
           leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
           value={search}
           onChange={handleSearchChange}
           style={{ width: '85%' }}
-        />      
+        />       */}
+          <MultiSelect
+          label="Item name"
+          placeholder="Search an item"
+          limit={5}
+          data={allData.map((item) => item.name)}
+          maxValues={1}
+          searchValue={itemName}
+          searchable 
+          nothingFoundMessage="Nothing found..."
+          onChange={setItemName} />
 
           <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
            
-          <TextInput label="Price per plate" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
+          {/* <TextInput label="Price per plate" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} /> */}
     
           <Space h="md"/>
           <Group justify='center'grow>

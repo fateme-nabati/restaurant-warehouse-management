@@ -83,7 +83,7 @@ function sortData(
   );
 }
 
-const data = [
+export const data = [
   {
     name: 'Athena Weissnat',
     price: '10000',
