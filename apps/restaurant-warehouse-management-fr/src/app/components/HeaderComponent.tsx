@@ -46,7 +46,11 @@ function HeaderComponent(props: HeaderComponentProps) {
                     color={"#008080"}
                     stroke={1.5}
                   />
-                  <Text color={"#008080"} visibleFrom="xs">restaurant warehouse management</Text>
+                  <Text 
+                  variant='gradient'
+                  gradient={{from: "#008080", to: "pink", deg:250}} visibleFrom="xs">
+                    restaurant warehouse management
+                  </Text>
         </Group>
 
         <Group>

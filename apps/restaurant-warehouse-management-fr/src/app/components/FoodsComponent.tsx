@@ -13,7 +13,7 @@ import {
   Modal,
   Box,
   Space,
-  MultiSelect
+  MultiSelect,
 } from '@mantine/core';
 import {
   IconSelector,
@@ -23,7 +23,7 @@ import {
   IconPlus,
 } from '@tabler/icons-react';
 import classes from './FoodsComponent.module.css';
-import {data as allData} from './ItemsComponent'
+import { data as allData } from './ItemsComponent';
 
 /* eslint-disable-next-line */
 export interface FoodsComponentProps {}
@@ -165,19 +165,30 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState(0);
   const [itemName, setItemName] = useState('');
+  const [itemAmount, setItemAmount] = useState(0);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleAddItem = () => {
+  const handleOpenModal2 = () => setIsModalOpen2(true);
+  const handleCloseModal2 = () => setIsModalOpen2(false);
+
+  const handleAddFood = () => {
     handleCloseModal();
-    setFoodName(''); 
+    setFoodName('');
     setPrice(0);
-    setItemName('');
+    // setItemName('');
   };
+  const handleAddIngidient = () => {
+    handleCloseModal2();
+    setItemName('');
+    setItemAmount(0);
+  };
+
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
@@ -251,58 +262,60 @@ export function FoodsComponent(props: FoodsComponentProps) {
               onChange={(e) => setPrice(parseInt(e.target.value))}
             />
             <Space h="md" />
-            <Box style={{ display: 'flex', width: '100%' }}>
-              {/* <TextInput
-                placeholder="Search a food"
-                mb="md"
-                leftSection={
-                  <IconSearch
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={1.5}
-                  />
-                }
-                value={search}
-                onChange={handleSearchChange}
-                style={{ width: '85%' }}
-              /> */}
-              <MultiSelect
-                label="Item name"
-                placeholder="Search an item"
-                limit={5}
-                data={allData.map((item) => item.name)}
-                maxValues={1}
-                searchValue={itemName}
-                searchable
-                nothingFoundMessage="Nothing found..."
-                onChange={() => setItemName}
-                style={{ width: '50%' }}
-              />
+            <Group justify="center" grow>
+            <Button
+              justify="center"
+              variant="filled"
+              color="green"
+              size="md-compact"
+              leftSection={
+                <IconPlus
+                  style={{ width: rem(16), height: rem(16) }}
+                  stroke={2}
+                />
+              }
+              onClick={handleOpenModal2}
+              style={{ marginTop: rem(25), height: rem(32) }}
+            >
+              Add ingridient
+            </Button>
+            </Group>
+            <Modal
+              opened={isModalOpen2}
+              onClose={handleCloseModal2}
+              title="Add an ingridient"
+            >
+              <Box style={{ display: 'flex', flexDirection: 'column' }}>
+                <MultiSelect
+                  label="Item name"
+                  placeholder="Search an item"
+                  limit={5}
+                  data={allData.map((item) => item.name)}
+                  maxValues={1}
+                  searchValue={itemName}
+                  searchable
+                  nothingFoundMessage="Nothing found..."
+                  onChange={() => setItemName}
+                />
 
-              <Space h="md" />
-              <Button
-                variant="filled"
-                color="green"
-                size="md-compact"
-                ml={50}
-                leftSection={
-                  <IconPlus
-                    style={{ width: rem(16), height: rem(16) }}
-                    stroke={2}
-                  />
-                }
-                onClick={handleOpenModal}
-                style={{ marginTop: rem(25), height: rem(32)}}
-              >
-                Add ingridient
-              </Button>
-            </Box>
-
+                <Space h="md" />
+                <Group justify="center" grow>
+                  <Button variant="outline" onClick={handleCloseModal2}>
+                    Cancel
+                  </Button>
+                  <Button variant="filled" onClick={handleAddIngidient}>
+                    Add
+                  </Button>
+                </Group>
+              </Box>
+            </Modal>
             <Space h="md" />
+            {/* <Text ta='center'>________________________________________</Text> */}
             <Group justify="center" grow>
               <Button variant="outline" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button variant="filled" onClick={handleAddItem}>
+              <Button variant="filled" onClick={handleAddFood}>
                 Add
               </Button>
             </Group>
