@@ -13,10 +13,17 @@ import {
   Modal,
   Box,
   Space,
- 
+  MultiSelect
 } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
+import {
+  IconSelector,
+  IconChevronDown,
+  IconChevronUp,
+  IconSearch,
+  IconPlus,
+} from '@tabler/icons-react';
 import classes from './FoodsComponent.module.css';
+import {data as allData} from './ItemsComponent'
 
 /* eslint-disable-next-line */
 export interface FoodsComponentProps {}
@@ -34,7 +41,11 @@ interface ThProps {
 }
 
 function Th({ children, reversed, sorted, onSort }: ThProps) {
-  const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
+  const Icon = sorted
+    ? reversed
+      ? IconChevronUp
+      : IconChevronDown
+    : IconSelector;
   return (
     <Table.Th className={classes.th}>
       <UnstyledButton onClick={onSort} className={classes.control}>
@@ -91,43 +102,43 @@ const data = [
   },
   {
     name: 'Chicken',
-    price: '2000', 
+    price: '2000',
   },
   {
     name: 'Fish',
-    price: '27000', 
+    price: '27000',
   },
   {
     name: 'Falafel',
-    price: '30000', 
+    price: '30000',
   },
   {
     name: 'Viola Bernhard',
-    price: '29000', 
+    price: '29000',
   },
   {
     name: 'Austin Jacobi',
-    price: '31000', 
+    price: '31000',
   },
   {
     name: 'Hershel Mosciski',
-    price: '35000', 
+    price: '35000',
   },
   {
     name: 'Mylene Ebert',
-    price: '4000', 
+    price: '4000',
   },
   {
     name: 'Lou Trantow',
-    price: '42000', 
+    price: '42000',
   },
   {
     name: 'Dariana Weimann',
-    price: '45000', 
+    price: '45000',
   },
   {
     name: 'Dr. Christy Herman',
-    price: '12000', 
+    price: '12000',
   },
   {
     name: 'Katelin Schuster',
@@ -135,15 +146,15 @@ const data = [
   },
   {
     name: 'Melyna Macejkovic',
-    price: '3500', 
+    price: '3500',
   },
   {
     name: 'Pinkie Rice',
-    price: '5000', 
+    price: '5000',
   },
   {
     name: 'Brain Kreiger',
-    price: '21000', 
+    price: '21000',
   },
 ];
 
@@ -156,14 +167,16 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState(0);
+  const [itemName, setItemName] = useState('');
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleAddItem = () => {
     handleCloseModal();
-    setFoodName(''); // Reset form after adding
+    setFoodName(''); 
     setPrice(0);
+    setItemName('');
   };
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
@@ -175,7 +188,9 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
     setSearch(value);
-    setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
+    setSortedData(
+      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
+    );
   };
 
   const rows = sortedData.map((row) => (
@@ -187,40 +202,120 @@ export function FoodsComponent(props: FoodsComponentProps) {
 
   return (
     <ScrollArea>
-     
       <Box style={{ display: 'flex', width: '100%' }}>
-      <TextInput
-        placeholder="Search a food"
-        mb="md"
-        leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
-        value={search}
-        onChange={handleSearchChange}
-        style={{ width: '85%' }}
-      />
-      
-      <Button variant="filled" color="green" size="md-compact" ml={50}  leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />} onClick={handleOpenModal} >Add</Button>
+        <TextInput
+          placeholder="Search a food"
+          mb="md"
+          leftSection={
+            <IconSearch
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
+          }
+          value={search}
+          onChange={handleSearchChange}
+          style={{ width: '85%' }}
+        />
 
-      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add a food">
-        <Box style={{ display: 'flex', flexDirection: 'column' }}>
-          <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
-           
-          <TextInput label="Price per plate" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
-    
-          <Space h="md"/>
-          <Group justify='center'grow>
-            <Button variant="outline" onClick={handleCloseModal}>
-              Cancel
-            </Button>
-            <Button variant="filled" onClick={handleAddItem}>
-              Add
-            </Button>
-          </Group>
+        <Button
+          variant="filled"
+          color="green"
+          size="md-compact"
+          ml={50}
+          leftSection={
+            <IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />
+          }
+          onClick={handleOpenModal}
+        >
+          Add
+        </Button>
 
-        </Box>
-      </Modal>
+        <Modal
+          opened={isModalOpen}
+          onClose={handleCloseModal}
+          title="Add a food"
+        >
+          <Box style={{ display: 'flex', flexDirection: 'column' }}>
+            <TextInput
+              label="Food Name"
+              placeholder="Enter food name"
+              value={foodName}
+              onChange={(e) => setFoodName(e.target.value)}
+            />
+
+            <TextInput
+              label="Price per plate"
+              placeholder="Enter price"
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(parseInt(e.target.value))}
+            />
+            <Space h="md" />
+            <Box style={{ display: 'flex', width: '100%' }}>
+              {/* <TextInput
+                placeholder="Search a food"
+                mb="md"
+                leftSection={
+                  <IconSearch
+                    style={{ width: rem(16), height: rem(16) }}
+                    stroke={1.5}
+                  />
+                }
+                value={search}
+                onChange={handleSearchChange}
+                style={{ width: '85%' }}
+              /> */}
+              <MultiSelect
+                label="Item name"
+                placeholder="Search an item"
+                limit={5}
+                data={allData.map((item) => item.name)}
+                maxValues={1}
+                searchValue={itemName}
+                searchable
+                nothingFoundMessage="Nothing found..."
+                onChange={() => setItemName}
+                style={{ width: '50%' }}
+              />
+
+              <Space h="md" />
+              <Button
+                variant="filled"
+                color="green"
+                size="md-compact"
+                ml={50}
+                leftSection={
+                  <IconPlus
+                    style={{ width: rem(16), height: rem(16) }}
+                    stroke={2}
+                  />
+                }
+                onClick={handleOpenModal}
+                style={{ marginTop: rem(25), height: rem(32)}}
+              >
+                Add ingridient
+              </Button>
+            </Box>
+
+            <Space h="md" />
+            <Group justify="center" grow>
+              <Button variant="outline" onClick={handleCloseModal}>
+                Cancel
+              </Button>
+              <Button variant="filled" onClick={handleAddItem}>
+                Add
+              </Button>
+            </Group>
+          </Box>
+        </Modal>
       </Box>
 
-      <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+      <Table
+        horizontalSpacing="md"
+        verticalSpacing="xs"
+        miw={700}
+        layout="fixed"
+      >
         <Table.Tbody>
           <Table.Tr>
             <Th
@@ -230,15 +325,14 @@ export function FoodsComponent(props: FoodsComponentProps) {
             >
               Name
             </Th>
-           
+
             <Th
               sorted={sortBy === 'price'}
               reversed={reverseSortDirection}
               onSort={() => setSorting('price')}
             >
               price
-            </Th> 
-           
+            </Th>
           </Table.Tr>
         </Table.Tbody>
         <Table.Tbody>

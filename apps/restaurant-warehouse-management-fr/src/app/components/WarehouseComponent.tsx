@@ -13,7 +13,7 @@ import {
   Button,
   Modal,
   MultiSelect,
-  Space
+  Space,
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './WarehouseComponent.module.css';
@@ -36,6 +36,12 @@ interface ThProps {
   onSort(): void;
 }
 
+interface LoadItemProps {
+  name: string;
+  changed: boolean;
+}
+
+
 function Th({ children, reversed, sorted, onSort }: ThProps) {
   const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
   return (
@@ -53,15 +59,21 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
     </Table.Th>
   );
 }
-function loadItem(name: string) {
-  const item = allData.filter((item) => item.name === name);
-  // setItemName(name);
-  return (
-    <Text>
-      `name : ${item[0].name}`
-      `type : ${item[0].type}`
-    </Text>
-  );
+function LoadItem({name, changed} : LoadItemProps) {
+  // alert("We are in LoadItem function");
+  if (changed)
+  {
+    // alert("We are in LoadItem function");
+    const item = allData.filter((item) => item.name === name);
+    // setItemName(name);
+    return (
+      <Text>
+        `name : ${item[0].name}`
+        `type : ${item[0].type}`
+      </Text>
+    );
+
+  }
 }
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
@@ -209,7 +221,6 @@ const data = [
 
 export function WarehouseComponent(props: WarehouseComponentProps) {
   const [search, setSearch] = useState('');
-  // const [modalSearch, setModalSearch] = useState('');
   const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
@@ -227,6 +238,7 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
     setItemName('');
     setFoodName(''); 
     setPrice(0);
+  // alert("We are in handleAddItem function");
   };
 
   const setSorting = (field: keyof RowData) => {
@@ -281,16 +293,17 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
           placeholder="Search an item"
           limit={5}
           data={allData.map((item) => item.name)}
-          maxValues={1}
+          maxValues={1}  
+          searchable
           searchValue={itemName}
-          searchable 
           nothingFoundMessage="Nothing found..."
-          onChange={setItemName} />
+          onChange={() => setItemName} 
+         /> 
 
-          <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+          {/* <LoadItem name={itemName} changed={itemName !== ''} /> */}
+
+          {/* <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} /> */}
            
-          {/* <TextInput label="Price per plate" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} /> */}
-    
           <Space h="md"/>
           <Group justify='center'grow>
             <Button variant="outline" onClick={handleCloseModal}>
