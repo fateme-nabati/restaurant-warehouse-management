@@ -18,7 +18,7 @@ export function Foods(props: FoodsProps) {
       padding="md"
     >
       <HeaderComponent />
-      <NavbarComponent />
+      <NavbarComponent activeLabel='Foods'/>
       <AppShell.Main>
         <FoodsComponent />
       </AppShell.Main>

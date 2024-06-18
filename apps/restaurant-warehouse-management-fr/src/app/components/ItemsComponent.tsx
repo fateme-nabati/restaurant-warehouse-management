@@ -14,13 +14,8 @@ import {
   Box,
   Select,
   Space,
-  // MultiSelect,
-  // Combobox,
-  // ComboboxInput,
-  // ComboboxItem,
-  // ComboboxList
+  
 } from '@mantine/core';
-// import { useDisclosure } from '@mantine/hooks';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './ItemsComponent.module.css';
 
@@ -88,7 +83,7 @@ function sortData(
   );
 }
 
-const data = [
+export const data = [
   {
     name: 'Athena Weissnat',
     price: '10000',

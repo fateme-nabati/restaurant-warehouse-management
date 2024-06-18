@@ -9,10 +9,15 @@ import {
   TextInput,
   rem,
   keys,
+  Box,
+  Button,
+  Modal,
+  MultiSelect,
+  Space,
 } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react';
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './WarehouseComponent.module.css';
-
+import {data as allData} from './ItemsComponent' ;
 /* eslint-disable-next-line */
 export interface WarehouseComponentProps {}
 
@@ -31,6 +36,12 @@ interface ThProps {
   onSort(): void;
 }
 
+interface LoadItemProps {
+  name: string;
+  changed: boolean;
+}
+
+
 function Th({ children, reversed, sorted, onSort }: ThProps) {
   const Icon = sorted ? (reversed ? IconChevronUp : IconChevronDown) : IconSelector;
   return (
@@ -48,7 +59,22 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
     </Table.Th>
   );
 }
+function LoadItem({name, changed} : LoadItemProps) {
+  // alert("We are in LoadItem function");
+  if (changed)
+  {
+    // alert("We are in LoadItem function");
+    const item = allData.filter((item) => item.name === name);
+    // setItemName(name);
+    return (
+      <Text>
+        `name : ${item[0].name}`
+        `type : ${item[0].type}`
+      </Text>
+    );
 
+  }
+}
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
@@ -199,6 +225,22 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [itemName, setItemName] = useState('');
+  const [foodName, setFoodName] = useState('');
+  const [price, setPrice] = useState(0);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
+  const handleAddItem = () => {
+    handleCloseModal();
+    setItemName('');
+    setFoodName(''); 
+    setPrice(0);
+  // alert("We are in handleAddItem function");
+  };
+
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
@@ -224,13 +266,58 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
 
   return (
     <ScrollArea>
+      <Box style={{ display: 'flex', width: '100%' }}>
       <TextInput
         placeholder="Search an item"
         mb="md"
         leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
         value={search}
         onChange={handleSearchChange}
-      />
+        style={{ width: '85%' }}
+      />      
+      <Button variant="filled" color="green" size="md-compact" ml={50}  leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />} onClick={handleOpenModal} >Add</Button>
+
+      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add an item to warehouse">
+        <Box style={{ display: 'flex', flexDirection: 'column' }}> 
+
+          {/* <TextInput
+          placeholder="Search an item"
+          mb="md"
+          leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
+          value={search}
+          onChange={handleSearchChange}
+          style={{ width: '85%' }}
+        />       */}
+          <MultiSelect
+          label="Item name"
+          placeholder="Search an item"
+          limit={5}
+          data={allData.map((item) => item.name)}
+          maxValues={1}  
+          searchable
+          searchValue={itemName}
+          nothingFoundMessage="Nothing found..."
+          onChange={() => setItemName} 
+         /> 
+
+          {/* <LoadItem name={itemName} changed={itemName !== ''} /> */}
+
+          {/* <TextInput label="Food Name" placeholder="Enter food name" value={foodName} onChange={(e) => setFoodName(e.target.value)} /> */}
+           
+          <Space h="md"/>
+          <Group justify='center'grow>
+            <Button variant="outline" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            <Button variant="filled" onClick={handleAddItem}>
+              Add
+            </Button>
+          </Group>
+
+        </Box>
+      </Modal>
+      </Box>
+
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
         <Table.Tbody>
           <Table.Tr>

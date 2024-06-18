@@ -1,14 +1,14 @@
 // import styles from './AppShell.module.css';
-import { AppShell } from '@mantine/core';
+import { AppShell, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import HeaderComponent from '../components/HeaderComponent';
 import NavbarComponent from '../components/NavbarComponent';
-import RestaurantComponent from '../components/RestaurantComponent';
+import { DateInfoComponent } from '../components/DateInfoComponent';
 
 /* eslint-disable-next-line */
-export interface RestaurantProps {} 
+export interface DateInfoProps {} 
 
-export function Restaurant(props: RestaurantProps) {
+export function DateInfo(props: DateInfoProps) {
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -20,7 +20,9 @@ export function Restaurant(props: RestaurantProps) {
       <HeaderComponent />
       <NavbarComponent activeLabel='Restaurant'/>
       <AppShell.Main>
-        <RestaurantComponent />
+       <Text ml={50}>Saturday June, 1, 2024</Text>
+       <Text ml={50}>Ghorme  sabzi :</Text>
+        <DateInfoComponent />
       </AppShell.Main>
     </AppShell>
   );

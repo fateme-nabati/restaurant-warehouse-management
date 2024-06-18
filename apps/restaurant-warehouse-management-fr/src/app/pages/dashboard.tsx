@@ -16,13 +16,11 @@ export function Dashboard(props: DashboardProps) {
       navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
       padding="md"
     >
-      {/* <AppShell.Header> */}
-        <HeaderComponent />
-      {/* </AppShell.Header> */}
-      {/* <AppShell.Navbar p="md"> */}
-       <NavbarComponent />
-      {/* </AppShell.Navbar> */}
-      <AppShell.Main>Main</AppShell.Main>
+      
+      <HeaderComponent /> 
+      <NavbarComponent activeLabel='Dashboard'/> 
+      <AppShell.Main>This Is Dashboard Page</AppShell.Main>
+
     </AppShell>
   );
 }

@@ -19,7 +19,7 @@ export function Warehouse(props: WarehouseProps) {
     >
      
        <HeaderComponent />   
-       <NavbarComponent />
+       <NavbarComponent activeLabel='Warehouse'/>
       
       <AppShell.Main>
         <WarehouseComponent />
