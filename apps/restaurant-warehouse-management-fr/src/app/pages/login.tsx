@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   TextInput,
   PasswordInput,
@@ -10,10 +11,18 @@ import {
   Group,
   Button,
 } from '@mantine/core';
+import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom';
 // import { setActive } from '../components/NavbarComponent'
+
+// interface RowData {
+//   name: string;
+//   price: string;
+// }
+
 export function Login() {
   const navigate = useNavigate();
+
   return (
     // <Router>
     <Container size={420} my={40}>

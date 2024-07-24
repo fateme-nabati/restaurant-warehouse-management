@@ -9,7 +9,7 @@ import { verify } from "../../utils/verify";
 import * as express from 'express';
 const router = express.Router();
 
-router.get('/', verify, getAllUsers);
+router.get('/', getAllUsers);
 router.get('/:personnel_code', verify, getUserById);
 router.post('/', verify, createUser);
 router.put('/:personnel_code', verify, updateUser);
