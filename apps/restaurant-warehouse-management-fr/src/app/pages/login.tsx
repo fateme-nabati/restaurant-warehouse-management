@@ -12,16 +12,52 @@ import {
   Button,
 } from '@mantine/core';
 import axios from "axios"
+import {AxiosError } from "axios"
 import { Link, useNavigate } from 'react-router-dom';
+import { response } from "express";
 // import { setActive } from '../components/NavbarComponent'
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// interface RowData {
-//   name: string;
-//   price: string;
-// }
+interface RowData {
+  username: string;
+  password: string;
+}
 
 export function Login() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const handleLogin = (values: RowData) => {
+    // console.log("axios getUsers");
+    axios.post('http://localhost:3333/users/login', values)
+        .then(res => {
+          console.log(values);
+          console.log("successful login", res.data)
+          // AsyncStorage.setItem('userToken', res.data.token)
+            // .then(() => {
+                navigate('Dashboard');
+            // })
+            // const { data } = res.data;
+               // setUserName("hello from backend :)")
+                // localStorage.setItem('app-token', data)
+                // history.push('/home')
+            
+            // else {
+                // console.log("axios error")
+                // history.push('/login')
+                // navigate('Login')
+            // }
+        })
+        .catch((error: AxiosError) => {
+          console.log(values);
+          console.log("login error :(((");
+          console.log(error);
+          alert(error.response?.data)
+          
+    })
+  }
+
+  // useEffect(() => {getResponse()}, []);
 
   return (
     // <Router>
@@ -40,11 +76,16 @@ export function Login() {
         <TextInput
           label="Username"
           placeholder="Your personnel code"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <PasswordInput
           label="Password"
-          placeholder="Your password"
+          placeholder="Your password"          
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+
           required
           mt="md"
         />
@@ -65,8 +106,7 @@ export function Login() {
           radius="lg"
           color="teal"
           onClick={() => {
-            navigate('/Restaurant')
-            // setActive('/Restaurant')
+            handleLogin({"username": username,"password": password})
           }}
         >
           Sign in
