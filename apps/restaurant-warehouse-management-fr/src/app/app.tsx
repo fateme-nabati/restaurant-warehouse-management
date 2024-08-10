@@ -2,6 +2,7 @@
 import styles from './app.module.css';
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
+import { Notifications } from '@mantine/notifications';
 // import NxWelcome from './nx-welcome';
 import { Login } from './pages/login';
 import { ForgetPassword } from './pages/forgetPassword'
@@ -16,7 +17,7 @@ import { Route, Routes} from 'react-router-dom';
 export function App() {
   return (
     <MantineProvider>
-
+        <Notifications />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/ForgetPassword" element={<ForgetPassword />} />

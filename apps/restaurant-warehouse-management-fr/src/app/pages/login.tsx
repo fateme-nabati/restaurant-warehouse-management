@@ -15,6 +15,8 @@ import axios from "axios"
 import {AxiosError } from "axios"
 import { Link, useNavigate } from 'react-router-dom';
 import { response } from "express";
+import { notifications, showNotification } from '@mantine/notifications';
+import { IconAlertTriangle } from "@tabler/icons-react";
 // import { setActive } from '../components/NavbarComponent'
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -52,7 +54,17 @@ export function Login() {
           console.log(values);
           console.log("login error :(((");
           console.log(error);
-          alert(error.response?.data)
+          // alert(error.response?.data)
+          // const message = JSON.stringify(error.response?.data)
+          notifications.show({
+            withBorder: true,
+            title: 'Login failed',
+            message: JSON.stringify(error.response?.data), 
+            color: 'red',
+            // position: 'bottom-center',
+            // icon: <IconAlertTriangle />,
+            style: {borderColor: 'red', width: '30rem' },
+        });
           
     })
   }
