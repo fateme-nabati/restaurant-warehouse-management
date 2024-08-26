@@ -47,7 +47,7 @@ export function Dashboard(props: DashboardProps) {
                 // navigate('Login')
             // }
         })
-        .catch(error => {console.log("axios error :(((")})
+        .catch(error => {console.log("axios error in dashboard page :(((")})
   }
 
   useEffect(() => {getResponse()}, []);

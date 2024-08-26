@@ -1,7 +1,7 @@
 import { pool } from "../../../db"
 export const getAllWarehouseItems = async (req, res) => {
 
-    await pool.query('SELECT * FROM warehouse_item ORDER BY id ASC', (error, results) => {
+    await pool.query('SELECT name, unit, price, type FROM warehouse_item ORDER BY id ASC', (error, results) => {
       if (error) {
         throw error
       }

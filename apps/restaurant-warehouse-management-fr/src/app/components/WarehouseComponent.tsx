@@ -17,7 +17,8 @@ import {
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import classes from './WarehouseComponent.module.css';
-import {data as allData} from './ItemsComponent' ;
+// import {data as allData} from './ItemsComponent' ;
+
 /* eslint-disable-next-line */
 export interface WarehouseComponentProps {}
 
@@ -103,7 +104,20 @@ function sortData(
     payload.search
   );
 }
-
+export const allData = [ // in kole itme hast ke bayad ba get warehouseItems be dast biad
+  {
+    name: 'Athena Weissnat',
+    price: '10000',
+    unit: 'Elouis',
+    type: 'food stuff'
+  },
+  {
+    name: 'Deangelo Runolfsson',
+    price: '1500',
+    unit: 'Kadin_Trantow87@yahoo.com',
+    type: 'food stuff'
+  }
+]
 const data = [
   {
     name: 'Athena Weissnat',

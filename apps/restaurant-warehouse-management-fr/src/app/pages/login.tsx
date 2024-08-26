@@ -14,11 +14,10 @@ import {
 import axios from "axios"
 import {AxiosError } from "axios"
 import { Link, useNavigate } from 'react-router-dom';
-import { response } from "express";
-import { notifications, showNotification } from '@mantine/notifications';
-import { IconAlertTriangle } from "@tabler/icons-react";
+import { notifications } from '@mantine/notifications';
+import { request } from "http";
 // import { setActive } from '../components/NavbarComponent'
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-community/async-storage';
 
 interface RowData {
   username: string;
@@ -35,10 +34,13 @@ export function Login() {
         .then(res => {
           console.log(values);
           console.log("successful login", res.data)
-          // AsyncStorage.setItem('userToken', res.data.token)
-            // .then(() => {
-                navigate('Dashboard');
-            // })
+          localStorage.setItem('userToken', res.data.sessionID)
+          console.log("token: ", JSON.stringify(res.data.cookie))
+          console.log("token: ", res.headers.cookie)
+          console.log("token: ", res.headers.SessionID)
+          console.log("token: ", res.data.SessionID)
+          navigate('Dashboard');
+            
             // const { data } = res.data;
                // setUserName("hello from backend :)")
                 // localStorage.setItem('app-token', data)
@@ -52,10 +54,7 @@ export function Login() {
         })
         .catch((error: AxiosError) => {
           console.log(values);
-          console.log("login error :(((");
-          console.log(error);
-          // alert(error.response?.data)
-          // const message = JSON.stringify(error.response?.data)
+          console.log(error); 
           notifications.show({
             withBorder: true,
             title: 'Login failed',

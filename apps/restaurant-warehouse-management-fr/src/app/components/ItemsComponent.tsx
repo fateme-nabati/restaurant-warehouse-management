@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   ScrollArea,
@@ -17,6 +17,7 @@ import {
   
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
+import axios from "axios"
 import classes from './ItemsComponent.module.css';
 
 /* eslint-disable-next-line */
@@ -25,7 +26,7 @@ export interface ItemsComponentProps {}
 interface RowData {
   name: string;
   unit: string;
-  price: string;
+  price: number;
   type: string;
 }
 
@@ -57,8 +58,11 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
-  );
+    Object.keys(item).some((key) => {
+      return typeof key === 'string' && key.toLowerCase().includes(query)}));
+      // return data.filter((item) =>
+      //   keys(data[0]).some((key) => typeof key === 'string' && item[key].toLowerCase().includes(query))
+      // );
 }
 
 function sortData(
@@ -73,121 +77,131 @@ function sortData(
 
   return filterData(
     [...data].sort((a, b) => {
-      if (payload.reversed) {
-        return b[sortBy].localeCompare(a[sortBy]);
-      }
-
-      return a[sortBy].localeCompare(b[sortBy]);
+        const aValue = a[sortBy];
+        const bValue = b[sortBy];
+  
+        // Handle sorting for string properties
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          return payload.reversed
+            ? bValue.localeCompare(aValue)
+            : aValue.localeCompare(bValue);
+        }
+  
+        // Handle sorting for number properties
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return payload.reversed ? bValue - aValue : aValue - bValue;
+        }
+        return 0;
     }),
     payload.search
   );
 }
 
-export const data = [
-  {
-    name: 'Athena Weissnat',
-    price: '10000',
-    unit: 'Elouis',
-    type: 'food stuff'
-  },
-  {
-    name: 'Deangelo Runolfsson',
-    price: '1500',
-    unit: 'Kadin_Trantow87@yahoo.com',
-    type: 'food stuff'
-  },
-  {
-    name: 'Danny Carter',
-    price: '2000', 
-    unit: 'Marina3@hotmail.com',
-    type: 'food stuff'
-  },
-  {
-    name: 'Trace Tremblay PhD',
-    price: '27000', 
-    unit: 'Antonina.Pouros@yahoo.com',
-    type: 'food stuff'
-  },
-  {
-    name: 'Derek Dibbert',
-    price: '30000', 
-    unit: 'Abagail29@hotmail.com',
-    type: 'food stuff'
-  },
-  {
-    name: 'Viola Bernhard',
-    price: '29000', 
-    unit: 'Jamie23@hotmail.com',
-    type: 'food stuff'
-  },
-  {
-    name: 'Austin Jacobi',
-    price: '31000', 
-    unit: 'Genesis42@yahoo.com',
-    type: 'food stuff'
-  },
-  {
-    name: 'Hershel Mosciski',
-    price: '35000', 
-    unit: 'Idella.Stehr28@yahoo.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Mylene Ebert',
-    price: '4000', 
-    unit: 'Hildegard17@hotmail.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Lou Trantow',
-    price: '42000', 
-    unit: 'Hillard.Barrows1@hotmail.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Dariana Weimann',
-    price: '45000', 
-    unit: 'Colleen80@gmail.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Dr. Christy Herman',
-    price: '12000', 
-    unit: 'Lilyan98@gmail.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Katelin Schuster',
-    price: '18000',
-    unit: 'Erich_Brekke76@gmail.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Melyna Macejkovic',
-    price: '3500', 
-    unit: 'Kylee4@yahoo.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Pinkie Rice',
-    price: '5000', 
-    unit: 'Fiona.Kutch@hotmail.com',
-    type: 'dish side'
-  },
-  {
-    name: 'Brain Kreiger',
-    price: '21000', 
-    unit: 'Rico98@hotmail.com',
-    type: 'dish side'
-  },
-];
+// export const data = [
+//   {
+//     name: 'Athena Weissnat',
+//     price: '10000',
+//     unit: 'Elouis',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Deangelo Runolfsson',
+//     price: '1500',
+//     unit: 'Kadin_Trantow87@yahoo.com',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Danny Carter',
+//     price: '2000', 
+//     unit: 'Marina3@hotmail.com',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Trace Tremblay PhD',
+//     price: '27000', 
+//     unit: 'Antonina.Pouros@yahoo.com',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Derek Dibbert',
+//     price: '30000', 
+//     unit: 'Abagail29@hotmail.com',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Viola Bernhard',
+//     price: '29000', 
+//     unit: 'Jamie23@hotmail.com',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Austin Jacobi',
+//     price: '31000', 
+//     unit: 'Genesis42@yahoo.com',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Hershel Mosciski',
+//     price: '35000', 
+//     unit: 'Idella.Stehr28@yahoo.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Mylene Ebert',
+//     price: '4000', 
+//     unit: 'Hildegard17@hotmail.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Lou Trantow',
+//     price: '42000', 
+//     unit: 'Hillard.Barrows1@hotmail.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Dariana Weimann',
+//     price: '45000', 
+//     unit: 'Colleen80@gmail.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Dr. Christy Herman',
+//     price: '12000', 
+//     unit: 'Lilyan98@gmail.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Katelin Schuster',
+//     price: '18000',
+//     unit: 'Erich_Brekke76@gmail.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Melyna Macejkovic',
+//     price: '3500', 
+//     unit: 'Kylee4@yahoo.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Pinkie Rice',
+//     price: '5000', 
+//     unit: 'Fiona.Kutch@hotmail.com',
+//     type: 'dish side'
+//   },
+//   {
+//     name: 'Brain Kreiger',
+//     price: '21000', 
+//     unit: 'Rico98@hotmail.com',
+//     type: 'dish side'
+//   },
+// ];
 
 export function ItemsComponent(props: ItemsComponentProps) {
   const [search, setSearch] = useState('');
-  const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-
+  const [data, setData] = useState<RowData[]>([{name: "", unit: "", price: 0, type: ""}]);
+  const [sortedData, setSortedData] = useState(data);
   // const [opened, { open, close }] = useDisclosure(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemName, setItemName] = useState('');
@@ -195,6 +209,15 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const [price, setPrice] = useState(0);
   const [type, setType] = useState <string | null>(''); // Add type selection
 
+  const getData = () => {
+    axios.get('http://localhost:3333/warehouseItems')
+        .then(res => {
+        
+          setData(res.data)
+        })
+        
+        .catch(error => {console.log("axios error in items page :(((")})
+  }
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
@@ -228,6 +251,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
     </Table.Tr>
   ));
 
+  useEffect(() => {getData()}, []);
   return (
     <ScrollArea>
       {/* <Group justify='space-between' mt="md" grow> */}
