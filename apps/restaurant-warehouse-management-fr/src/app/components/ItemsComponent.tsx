@@ -14,10 +14,11 @@ import {
   Box,
   Select,
   Space,
-  
+  Loader
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import axios from "axios"
+import { notifications } from '@mantine/notifications';
 import classes from './ItemsComponent.module.css';
 
 /* eslint-disable-next-line */
@@ -201,19 +202,26 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [data, setData] = useState<RowData[]>([{name: "", unit: "", price: 0, type: ""}]);
+  const [loading, setLoading] = useState<boolean>(true)
   const [sortedData, setSortedData] = useState(data);
   // const [opened, { open, close }] = useDisclosure(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [itemName, setItemName] = useState('');
-  const [unit, setUnit] = useState <string | null>(''); // Add unit selection
+  const [name, setName] = useState('');
+  const [unit, setUnit] = useState <string | null>(''); 
   const [price, setPrice] = useState(0);
-  const [type, setType] = useState <string | null>(''); // Add type selection
+  const [type, setType] = useState <string | null>(''); 
 
-  const getData = () => {
-    axios.get('http://localhost:3333/warehouseItems')
+  const getData = async () => {
+    console.log("befor load data")
+    setLoading(true);
+    await axios.get('http://localhost:3333/warehouseItems')
         .then(res => {
         
-          setData(res.data)
+          setData(res.data);
+          console.log("after load data")
+          
+          // setSorting('name');
+          setLoading(false);
         })
         
         .catch(error => {console.log("axios error in items page :(((")})
@@ -221,15 +229,55 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
+      console.log("befor add item")
+      // event.preventDefault();
+
+      // Prepare the data to be sent to the server
+      const newItem = {
+        name,
+        unit,
+        price: price,
+        type,
+      };
+      setLoading(true);
+      await axios.post('http://localhost:3333/warehouseItems', newItem)
+          .then(res => {
+            setLoading(false);
+            notifications.show({
+              withBorder: true,
+              title: 'Item added successfully!',
+              message: '', 
+              color: 'green',
+              position: 'bottom-right',
+              // icon: <IconAlertTriangle />,
+              style: {borderColor: 'green', width: '30rem' },
+            });
+            getData();
+            console.log("after add item")
+            console.log('new item:', newItem)
+          
+          })
+          
+            .catch(error => {
+              notifications.show({
+                withBorder: true,
+                title: 'Failed to add item!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-right',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+            })
+    
     // Implement logic to add item to warehouse with itemName, quantity, and category
     handleCloseModal();
-    setItemName(''); // Reset form after adding
+    setName(''); // Reset form after adding
     setUnit('');
     setPrice(0);
     setType('');
   };
-  const setSorting = (field: keyof RowData) => {
+  const setSorting = (field: keyof RowData | null) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
@@ -252,10 +300,18 @@ export function ItemsComponent(props: ItemsComponentProps) {
   ));
 
   useEffect(() => {getData()}, []);
+  // useEffect(() => {setSortedData(sortedData)}, [sortedData])
+  if(loading){
+    console.log("loading")
+    return <Loader type="dots" color="grape" />;
+  }
+  // if(loaded){
+  //   console.log("loaded")
+  //   return <Loader type="dots" color="grape" />;
+  // }
+  else {
   return (
-    <ScrollArea>
-      {/* <Group justify='space-between' mt="md" grow> */}
-     
+    <ScrollArea> 
       <Box style={{ display: 'flex', width: '100%' }}>
       <TextInput
         placeholder="Search an item"
@@ -270,14 +326,14 @@ export function ItemsComponent(props: ItemsComponentProps) {
 
       <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add an item">
         <Box style={{ display: 'flex', flexDirection: 'column' }}>
-          <TextInput label="Item Name" placeholder="Enter item name" value={itemName} onChange={(e) => setItemName(e.target.value)} />
+          <TextInput label="Item Name" placeholder="Enter item name" value={name} onChange={(e) => setName(e.target.value)} />
  
 
-          <Select label="Unit" placeholder="Select unit" data={['Gram', 'Kilogram','Peice', 'Slice', 'Pakage', 'Bottle']} value={unit} onChange={(_value, option) => setUnit(_value)}
+          <Select label="Unit" placeholder="Select unit" data={['Gram', 'Kilogram','Peice', 'Slice', 'Pakage', 'Bottle', 'Liter']} value={unit} onChange={(_value, option) => setUnit(_value)}
           />          
-          <TextInput label="Price per unit" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
+          <TextInput label="Price per unit" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} />
 
-          <Select label="Type" placeholder="Select item type" data={['Food stuff', 'Dish side']} value={type} onChange={(_value, option) => setType(_value)}
+          <Select label="Type" placeholder="Select item type" data={['food stuff', 'dish side']} value={type} onChange={(_value, option) => setType(_value)}
           />          
           <Space h="md"/>
           <Group justify='center'grow>
@@ -342,6 +398,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
       </Table>
     </ScrollArea>
   );
+ }
 }
 
 export default ItemsComponent;

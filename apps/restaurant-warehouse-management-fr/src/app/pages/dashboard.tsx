@@ -33,19 +33,11 @@ export function Dashboard(props: DashboardProps) {
     // console.log("axios getUsers");
     axios.get('http://localhost:3333')
         .then(res => {
-            // const { data } = res.data;
             if (res.data) {
               setResponse(res.data)
-               // setUserName("hello from backend :)")
-                // localStorage.setItem('app-token', data)
-                // history.push('/home')
-                // navigate('Dashboard');
+               
               }
-            // else {
-                // console.log("axios error")
-                // history.push('/login')
-                // navigate('Login')
-            // }
+           
         })
         .catch(error => {console.log("axios error in dashboard page :(((")})
   }
