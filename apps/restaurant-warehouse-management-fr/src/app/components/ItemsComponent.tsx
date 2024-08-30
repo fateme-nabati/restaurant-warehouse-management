@@ -98,104 +98,6 @@ function sortData(
   );
 }
 
-// export const data = [
-//   {
-//     name: 'Athena Weissnat',
-//     price: '10000',
-//     unit: 'Elouis',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Deangelo Runolfsson',
-//     price: '1500',
-//     unit: 'Kadin_Trantow87@yahoo.com',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Danny Carter',
-//     price: '2000', 
-//     unit: 'Marina3@hotmail.com',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Trace Tremblay PhD',
-//     price: '27000', 
-//     unit: 'Antonina.Pouros@yahoo.com',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Derek Dibbert',
-//     price: '30000', 
-//     unit: 'Abagail29@hotmail.com',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Viola Bernhard',
-//     price: '29000', 
-//     unit: 'Jamie23@hotmail.com',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Austin Jacobi',
-//     price: '31000', 
-//     unit: 'Genesis42@yahoo.com',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Hershel Mosciski',
-//     price: '35000', 
-//     unit: 'Idella.Stehr28@yahoo.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Mylene Ebert',
-//     price: '4000', 
-//     unit: 'Hildegard17@hotmail.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Lou Trantow',
-//     price: '42000', 
-//     unit: 'Hillard.Barrows1@hotmail.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Dariana Weimann',
-//     price: '45000', 
-//     unit: 'Colleen80@gmail.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Dr. Christy Herman',
-//     price: '12000', 
-//     unit: 'Lilyan98@gmail.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Katelin Schuster',
-//     price: '18000',
-//     unit: 'Erich_Brekke76@gmail.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Melyna Macejkovic',
-//     price: '3500', 
-//     unit: 'Kylee4@yahoo.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Pinkie Rice',
-//     price: '5000', 
-//     unit: 'Fiona.Kutch@hotmail.com',
-//     type: 'dish side'
-//   },
-//   {
-//     name: 'Brain Kreiger',
-//     price: '21000', 
-//     unit: 'Rico98@hotmail.com',
-//     type: 'dish side'
-//   },
-// ];
 
 export function ItemsComponent(props: ItemsComponentProps) {
   const [search, setSearch] = useState('');
@@ -204,7 +106,6 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const [data, setData] = useState<RowData[]>([{name: "", unit: "", price: 0, type: ""}]);
   const [loading, setLoading] = useState<boolean>(true)
   const [sortedData, setSortedData] = useState(data);
-  // const [opened, { open, close }] = useDisclosure(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [unit, setUnit] = useState <string | null>(''); 

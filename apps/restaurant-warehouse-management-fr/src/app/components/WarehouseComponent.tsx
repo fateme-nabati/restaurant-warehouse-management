@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   ScrollArea,
@@ -8,14 +8,15 @@ import {
   Center,
   TextInput,
   rem,
-  keys,
   Box,
   Button,
   Modal,
   MultiSelect,
   Space,
+  Loader
 } from '@mantine/core';
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
+import axios from "axios"
 import classes from './WarehouseComponent.module.css';
 // import {data as allData} from './ItemsComponent' ;
 
@@ -23,13 +24,19 @@ import classes from './WarehouseComponent.module.css';
 export interface WarehouseComponentProps {}
 
 interface RowData {
-  name: string;
+  item_name: string;
   unit: string;
-  amount: string;
-  price: string;
+  amount: number;
+  price_per_unit: number;
+  total_price: number;
   type: string;
 }
-
+interface RowAllData {
+  name: string;
+  unit: string;
+  price: number;
+  type: string;
+}
 interface ThProps {
   children: React.ReactNode;
   reversed: boolean;
@@ -60,26 +67,27 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
     </Table.Th>
   );
 }
-function LoadItem({name, changed} : LoadItemProps) {
-  // alert("We are in LoadItem function");
-  if (changed)
-  {
-    // alert("We are in LoadItem function");
-    const item = allData.filter((item) => item.name === name);
-    // setItemName(name);
-    return (
-      <Text>
-        `name : ${item[0].name}`
-        `type : ${item[0].type}`
-      </Text>
-    );
+// function LoadItem({name, changed} : LoadItemProps) {
+//   // alert("We are in LoadItem function");
+//   if (changed)
+//   {
+//     // alert("We are in LoadItem function");
+//     const item = allData.filter((item) => item.name === name);
+//     // setItemName(name);
+//     return (
+//       <Text>
+//         `name : ${item[0].name}`
+//         `type : ${item[0].type}`
+//       </Text>
+//     );
 
-  }
-}
+//   }
+// }
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
-    keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
+    Object.keys(item).some((key) => {
+      return typeof key === 'string' && key.toLowerCase().includes(query)})
   );
 }
 
@@ -95,166 +103,94 @@ function sortData(
 
   return filterData(
     [...data].sort((a, b) => {
-      if (payload.reversed) {
-        return b[sortBy].localeCompare(a[sortBy]);
-      }
-
-      return a[sortBy].localeCompare(b[sortBy]);
+        const aValue = a[sortBy];
+        const bValue = b[sortBy];
+  
+        // Handle sorting for string properties
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          return payload.reversed
+            ? bValue.localeCompare(aValue)
+            : aValue.localeCompare(bValue);
+        }
+  
+        // Handle sorting for number properties
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return payload.reversed ? bValue - aValue : aValue - bValue;
+        }
+        return 0;
     }),
     payload.search
   );
 }
-export const allData = [ // in kole itme hast ke bayad ba get warehouseItems be dast biad
-  {
-    name: 'Athena Weissnat',
-    price: '10000',
-    unit: 'Elouis',
-    type: 'food stuff'
-  },
-  {
-    name: 'Deangelo Runolfsson',
-    price: '1500',
-    unit: 'Kadin_Trantow87@yahoo.com',
-    type: 'food stuff'
-  }
-]
-const data = [
-  {
-    name: 'Athena Weissnat',
-    price: '10000',
-    amount: '20000',
-    unit: 'gram',
-    type: 'food stuff'
-  },
-  {
-    name: 'Deangelo Runolfsson',
-    price: '1500',
-    amount: '10000',
-    unit: 'gram',
-    type: 'food stuff'
-  },
-  {
-    name: 'Danny Carter',
-    price: '2000', 
-    amount: '11000',
-    unit: 'gram',
-    type: 'food stuff'
-  },
-  {
-    name: 'Trace Tremblay PhD',
-    price: '27000', 
-    amount: '130000',
-    unit: 'gram',
-    type: 'food stuff'
-  },
-  {
-    name: 'Derek Dibbert',
-    price: '30000', 
-    amount: '250000',
-    unit: 'gram',
-    type: 'food stuff'
-  },
-  {
-    name: 'Viola Bernhard',
-    price: '29000', 
-    amount: '250000',
-    unit: 'piece',
-    type: 'food stuff'
-  },
-  {
-    name: 'Austin Jacobi',
-    price: '31000', 
-    amount: '250000',
-    unit: 'piece',
-    type: 'food stuff'
-  },
-  {
-    name: 'Hershel Mosciski',
-    price: '35000', 
-    amount: '3000000',
-    unit: 'piece',
-    type: 'dish side'
-  },
-  {
-    name: 'Mylene Ebert',
-    price: '4000', 
-    amount: '3000000',
-    unit: 'piece',
-    type: 'dish side'
-  },
-  {
-    name: 'Lou Trantow',
-    price: '42000', 
-    amount: '3000000',
-    unit: 'slice',
-    type: 'dish side'
-  },
-  {
-    name: 'Dariana Weimann',
-    price: '45000', 
-    amount: '3000000',
-    unit: 'slice',
-    type: 'dish side'
-  },
-  {
-    name: 'Dr. Christy Herman',
-    price: '12000', 
-    amount: '3000000',
-    unit: 'slice',
-    type: 'dish side'
-  },
-  {
-    name: 'Katelin Schuster',
-    price: '18000',
-    amount: '3000000',
-    unit: 'slice',
-    type: 'dish side'
-  },
-  {
-    name: 'Melyna Macejkovic',
-    price: '3500', 
-    amount: '3500000',
-    unit: 'piece',
-    type: 'dish side'
-  },
-  {
-    name: 'Pinkie Rice',
-    price: '5000', 
-    amount: '4000000',
-    unit: 'gram',
-    type: 'dish side'
-  },
-  {
-    name: 'Brain Kreiger',
-    price: '21000', 
-    amount: '4000000',
-    unit: 'gram',
-    type: 'dish side'
-  },
-];
+// export const allData = [ // in kole itme hast ke bayad ba get warehouseItems be dast biad
+//   {
+//     name: 'Athena Weissnat',
+//     price: '10000',
+//     unit: 'Elouis',
+//     type: 'food stuff'
+//   },
+//   {
+//     name: 'Deangelo Runolfsson',
+//     price: '1500',
+//     unit: 'Kadin_Trantow87@yahoo.com',
+//     type: 'food stuff'
+//   }
+// ]
+
 
 export function WarehouseComponent(props: WarehouseComponentProps) {
   const [search, setSearch] = useState('');
-  const [sortedData, setSortedData] = useState(data);
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-
+  const [data, setData] = useState<RowData[]>([{item_name: "", amount: 0, unit: "", price_per_unit: 0, total_price:0, type: ""}]);
+  const [allData, setAllData] = useState<RowAllData[]>([{name: "", unit: "", price: 0, type: ""}]);
+  const [loading, setLoading] = useState<boolean>(true)
+  const [sortedData, setSortedData] = useState(data);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemName, setItemName] = useState('');
-  const [foodName, setFoodName] = useState('');
-  const [price, setPrice] = useState(0);
+  // const [foodName, setFoodName] = useState('');
+  // const [price, setPrice] = useState(0);
+  const getData = async () => { // get items that are in specific warehouse
+    console.log("befor load data")
+    setLoading(true);
+    await axios.get('http://localhost:3333/exist/warehouse/1')
+        .then(res => {
+        
+          setData(res.data);
+          console.log("after load data")
+          setLoading(false);
+        })
+        
+        .catch(error => {console.log("axios error in warehouse page :(((")})
+  }
 
-  const handleOpenModal = () => setIsModalOpen(true);
+  const getAllData = async () => { // get all items that are in defined in the system 
+    console.log("befor load all data")
+    setLoading(true);
+    await axios.get('http://localhost:3333/warehouseItems')
+        .then(res => {
+        
+          setAllData(res.data);
+          console.log("after load all data")
+          setLoading(false);
+        })
+        
+        .catch(error => {console.log("axios error in warehouse page :(((")})
+  }
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    getAllData();
+  }
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleAddItem = () => {
+    console.log("item found:", itemName)
     handleCloseModal();
     setItemName('');
-    setFoodName(''); 
-    setPrice(0);
+    // setFoodName(''); 
+    // setPrice(0);
   // alert("We are in handleAddItem function");
   };
-
   const setSorting = (field: keyof RowData) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
@@ -269,15 +205,22 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
   };
 
   const rows = sortedData.map((row) => (
-    <Table.Tr key={row.name}>
-      <Table.Td>{row.name}</Table.Td>
+    <Table.Tr key={row.item_name}>
+      <Table.Td>{row.item_name}</Table.Td>
       <Table.Td>{row.amount}</Table.Td>
       <Table.Td>{row.unit}</Table.Td>
-      <Table.Td>{row.price}</Table.Td>
+      <Table.Td>{row.price_per_unit}</Table.Td>
+      <Table.Td>{row.total_price}</Table.Td>
       <Table.Td>{row.type}</Table.Td>
     </Table.Tr>
   ));
 
+  useEffect(() => {getData()}, []);
+  if(loading){
+    console.log("loading")
+    return <Loader type="dots" color="grape" />;
+  }
+  else {
   return (
     <ScrollArea>
       <Box style={{ display: 'flex', width: '100%' }}>
@@ -336,9 +279,9 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
         <Table.Tbody>
           <Table.Tr>
             <Th
-              sorted={sortBy === 'name'}
+              sorted={sortBy === 'item_name'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('name')}
+              onSort={() => setSorting('item_name')}
             >
               Name
             </Th> 
@@ -357,11 +300,18 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
               unit
             </Th>
             <Th
-              sorted={sortBy === 'price'}
+              sorted={sortBy === 'price_per_unit'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('price')}
+              onSort={() => setSorting('price_per_unit')}
             >
-              price
+              price per unit
+            </Th>
+            <Th
+              sorted={sortBy === 'total_price'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('total_price')}
+            >
+              total price 
             </Th> 
             <Th
               sorted={sortBy === 'type'}
@@ -388,6 +338,7 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
       </Table>
     </ScrollArea>
   );
+ }
 }
 
 export default WarehouseComponent;
