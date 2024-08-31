@@ -19,6 +19,8 @@ import {
 import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
 import axios from "axios"
 import { notifications } from '@mantine/notifications';
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import classes from './ItemsComponent.module.css';
 
 /* eslint-disable-next-line */
@@ -162,7 +164,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
               title: 'Item added successfully!',
               message: '', 
               color: 'green',
-              position: 'top-center',
+              position: 'bottom-left',
               // icon: <IconAlertTriangle />,
               style: {borderColor: 'green', width: '30rem' },
             });
@@ -173,12 +175,14 @@ export function ItemsComponent(props: ItemsComponentProps) {
           })
           
             .catch(error => {
+
+              setLoading(false);
               notifications.show({
                 withBorder: true,
                 title: 'Failed to add item!',
                 message: JSON.stringify(error.response?.data), 
                 color: 'red',
-                position: 'top-left',
+                position: 'bottom-left',
                 style: {borderColor: 'red', width: '30rem' },
               });
             })
@@ -241,7 +245,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
           <TextInput label="Item Name" placeholder="Enter item name" value={name} onChange={(e) => setName(e.target.value)} />
  
 
-          <Select label="Unit" placeholder="Select unit" data={['Gram', 'Kilogram','Peice', 'Slice', 'Pakage', 'Bottle', 'Liter']} value={unit} onChange={(_value, option) => setUnit(_value)}
+          <Select label="Unit" placeholder="Select unit" data={['Gram', 'Kilogram','Peice', 'Slice', 'Pakage', 'Bottle', 'Liter', '-']} value={unit} onChange={(_value, option) => setUnit(_value)}
           />          
           <TextInput label="Price per unit" placeholder="Enter price" type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} />
 

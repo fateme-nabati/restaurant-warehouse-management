@@ -15,6 +15,8 @@ import axios from "axios"
 import {AxiosError } from "axios"
 import { Link, useNavigate } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import { request } from "http";
 // import { setActive } from '../components/NavbarComponent'
 // import AsyncStorage from '@react-native-community/async-storage';
@@ -24,6 +26,8 @@ interface RowData {
   password: string;
 }
 
+// export let name: string;
+// export let phone_number: string;
 export function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
@@ -34,23 +38,17 @@ export function Login() {
         .then(res => {
           console.log(values);
           console.log("successful login", res.data)
-          localStorage.setItem('userToken', res.data.sessionID)
-          console.log("token: ", JSON.stringify(res.data.cookie))
-          console.log("token: ", res.headers.cookie)
-          console.log("token: ", res.headers.SessionID)
-          console.log("token: ", res.data.SessionID)
+          // localStorage.setItem('userToken', res.data.sessionID)
+          // console.log("token: ", JSON.stringify(res.data.cookie))
+          // console.log("token: ", res.headers.cookie)
+          // console.log("token: ", res.headers.SessionID)
+          // console.log("token: ", res.data.SessionID)
+          localStorage.setItem('user', JSON.stringify(res.data));
+          // name = res.data.first_name + ' ' + res.data.last_name;
+          // phone_number = res.data.phone_number;
           navigate('Dashboard');
+           
             
-            // const { data } = res.data;
-               // setUserName("hello from backend :)")
-                // localStorage.setItem('app-token', data)
-                // history.push('/home')
-            
-            // else {
-                // console.log("axios error")
-                // history.push('/login')
-                // navigate('Login')
-            // }
         })
         .catch((error: AxiosError) => {
           console.log(values);
@@ -60,7 +58,7 @@ export function Login() {
             title: 'Login failed',
             message: JSON.stringify(error.response?.data), 
             color: 'red',
-            // position: 'bottom-center',
+            position: 'bottom-left',
             // icon: <IconAlertTriangle />,
             style: {borderColor: 'red', width: '30rem' },
         });

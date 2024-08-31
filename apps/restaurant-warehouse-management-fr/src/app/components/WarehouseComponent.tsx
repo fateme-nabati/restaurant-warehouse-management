@@ -157,6 +157,7 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
         .then(res => {
         
           setData(res.data);
+          setSortedData(res.data);
           console.log("after load data")
           setLoading(false);
         })

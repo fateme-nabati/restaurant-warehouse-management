@@ -1,3 +1,4 @@
+// import {name, phone_number} from '../pages/login';
 import cx from 'clsx';
 import { Autocomplete, Group, Burger, rem, Avatar, Text, Menu, UnstyledButton, useMantineTheme, AppShell } from '@mantine/core';
 import { useState } from 'react';
@@ -7,20 +8,54 @@ import classes from './HeaderComponent.module.css';
 /* eslint-disable-next-line */
 export interface HeaderComponentProps {}
 
-const user = {
-  name: 'Ali Alavi',
-  email: 'ali.alavi@gmail.com',
-  image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png',
-};
-
 const links = [
-  { link: '/dashboard', label: 'Dashboard' },
   { link: '/items', label: 'Warehouse Items' },
   { link: '/foods', label: 'Foods' },
+  { link: '/restaurant', label: 'Restaurant' },
   { link: '/reports', label: 'Reports' },
 ];
 
 function HeaderComponent(props: HeaderComponentProps) {
+  const string_user = localStorage.getItem('user')
+
+  interface RowData {
+    "personnel_code": string;
+    "national_code": string;
+    "first_name": string;
+    "last_name": string;
+    "full_name": string;
+    "birth_date": string;
+    "phone_number": string;
+    "password": string;
+    "image" : string;
+  }
+
+  let user: RowData = {
+    "personnel_code": "",
+    "national_code": "",
+    "first_name": "",
+    "last_name": "",
+    "full_name": "",
+    "birth_date": "",
+    "phone_number": "",
+    "password": "",
+    "image": ""
+  };
+
+  if (string_user) {
+    user = JSON.parse(string_user)
+  }
+  console.log("getItem", user)
+  user.full_name = user.first_name + ' ' + user.last_name;
+  user.image = 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png';
+  console.log("getItem 2", user)
+
+  // const user = {
+  //   name: JSON.parse(localStorage.getItem('user'))
+  //   phone_number,
+  //   image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png',
+  // };
+
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
@@ -78,9 +113,9 @@ function HeaderComponent(props: HeaderComponentProps) {
                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
               >
         <Group gap={7}>
-            <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+            <Avatar src={user.image} alt={user.full_name} radius="xl" size={20} />
             <Text fw={500} size="sm" lh={1} mr={3}>
-              {user.name}
+              {user.full_name}
             </Text>
             <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
             </Group>
