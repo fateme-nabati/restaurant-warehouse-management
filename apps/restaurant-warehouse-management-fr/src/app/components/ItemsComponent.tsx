@@ -105,7 +105,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
   const [data, setData] = useState<RowData[]>([{name: "", unit: "", price: 0, type: ""}]);
   const [loading, setLoading] = useState<boolean>(true)
-  const [sortedData, setSortedData] = useState(data);
+  const [sortedData, setSortedData] = useState<RowData[]>(data);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState('');
   const [unit, setUnit] = useState <string | null>(''); 
@@ -114,18 +114,28 @@ export function ItemsComponent(props: ItemsComponentProps) {
 
   const getData = async () => {
     console.log("befor load data")
+    console.log(data);
     setLoading(true);
     await axios.get('http://localhost:3333/warehouseItems')
-        .then(res => {
-        
-          setData(res.data);
+        .then(async (res) => {
+          const items: RowData[] = res.data;
+          setData(items);
+          setSortedData(items)
           console.log("after load data")
-          
+          console.log("data", data)
+          console.log("res.data", res.data)
+          console.log("items", items)
           // setSorting('name');
-          setLoading(false);
+          // setLoading(false);
+          // setSortBy('name');
+          // setSortedData(sortData(data, { sortBy: 'name', reversed: reverseSortDirection, search: 'm' }));
         })
         
         .catch(error => {console.log("axios error in items page :(((")})
+
+        setLoading(false);
+        console.log("end of getData function")
+        console.log(data)
   }
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -144,13 +154,15 @@ export function ItemsComponent(props: ItemsComponentProps) {
       setLoading(true);
       await axios.post('http://localhost:3333/warehouseItems', newItem)
           .then(res => {
+            // handleSearchChange();     
             setLoading(false);
+           
             notifications.show({
               withBorder: true,
               title: 'Item added successfully!',
               message: '', 
               color: 'green',
-              position: 'bottom-right',
+              position: 'top-center',
               // icon: <IconAlertTriangle />,
               style: {borderColor: 'green', width: '30rem' },
             });
@@ -166,7 +178,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
                 title: 'Failed to add item!',
                 message: JSON.stringify(error.response?.data), 
                 color: 'red',
-                position: 'bottom-right',
+                position: 'top-left',
                 style: {borderColor: 'red', width: '30rem' },
               });
             })
@@ -210,7 +222,6 @@ export function ItemsComponent(props: ItemsComponentProps) {
   //   console.log("loaded")
   //   return <Loader type="dots" color="grape" />;
   // }
-  else {
   return (
     <ScrollArea> 
       <Box style={{ display: 'flex', width: '100%' }}>
@@ -299,7 +310,7 @@ export function ItemsComponent(props: ItemsComponentProps) {
       </Table>
     </ScrollArea>
   );
- }
+ 
 }
 
 export default ItemsComponent;
