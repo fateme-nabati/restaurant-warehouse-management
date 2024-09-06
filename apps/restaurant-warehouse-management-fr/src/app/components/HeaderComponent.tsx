@@ -45,10 +45,10 @@ function HeaderComponent(props: HeaderComponentProps) {
   if (string_user) {
     user = JSON.parse(string_user)
   }
-  console.log("getItem", user)
+  // console.log("getItem", user)
   user.full_name = user.first_name + ' ' + user.last_name;
   user.image = 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png';
-  console.log("getItem 2", user)
+  // console.log("getItem 2", user)
 
   // const user = {
   //   name: JSON.parse(localStorage.getItem('user'))

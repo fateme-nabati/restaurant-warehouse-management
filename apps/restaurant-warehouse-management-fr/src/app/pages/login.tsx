@@ -17,7 +17,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import { request } from "http";
 // import { setActive } from '../components/NavbarComponent'
 // import AsyncStorage from '@react-native-community/async-storage';
 
@@ -26,14 +25,12 @@ interface RowData {
   password: string;
 }
 
-// export let name: string;
-// export let phone_number: string;
+
 export function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const handleLogin = (values: RowData) => {
-    // console.log("axios getUsers");
+  const handleLogin = (values: RowData) => { 
     axios.post('http://localhost:3333/users/login', values)
         .then(res => {
           console.log(values);
@@ -59,14 +56,11 @@ export function Login() {
             message: JSON.stringify(error.response?.data), 
             color: 'red',
             position: 'bottom-left',
-            // icon: <IconAlertTriangle />,
             style: {borderColor: 'red', width: '30rem' },
         });
           
     })
   }
-
-  // useEffect(() => {getResponse()}, []);
 
   return (
     // <Router>
@@ -74,12 +68,12 @@ export function Login() {
       <Title ta="center">
         Welcome to university restaurant warehouse management system!
       </Title>
-      <Text c="dimmed" size="sm" ta="center" mt={5}>
+      {/* <Text c="dimmed" size="sm" ta="center" mt={5}>
         Do not have an account yet?{' '}
         <Anchor size="sm" component="button">
           Create account
         </Anchor>
-      </Text>
+      </Text> */}
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <TextInput

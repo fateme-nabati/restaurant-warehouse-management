@@ -22,7 +22,7 @@ export const loginReq = async (req, res) => {
       existingUser = results.rows[0]   
 
       error ?
-        res.status(403).send("error :((") : 
+        res.status(403).send("error in server") : 
         !existingUser ?
           res.status(403).send('Invalid username!') :     
           !await bcrypt.compare(password, existingUser.password) ?

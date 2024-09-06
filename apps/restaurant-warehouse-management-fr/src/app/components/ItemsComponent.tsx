@@ -8,7 +8,6 @@ import {
   Center,
   TextInput,
   rem,
-  keys,
   Button,
   Modal,
   Box,
@@ -109,9 +108,9 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const [loading, setLoading] = useState<boolean>(true)
   const [sortedData, setSortedData] = useState<RowData[]>(data);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState('');
+  const [name, setName] = useState <string>('');
   const [unit, setUnit] = useState <string | null>(''); 
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState <number>(0);
   const [type, setType] = useState <string | null>(''); 
 
   const getData = async () => {
@@ -124,13 +123,9 @@ export function ItemsComponent(props: ItemsComponentProps) {
           setData(items);
           setSortedData(items)
           console.log("after load data")
-          console.log("data", data)
-          console.log("res.data", res.data)
-          console.log("items", items)
-          // setSorting('name');
-          // setLoading(false);
-          // setSortBy('name');
-          // setSortedData(sortData(data, { sortBy: 'name', reversed: reverseSortDirection, search: 'm' }));
+          // console.log("data", data)
+          // console.log("res.data", res.data)
+          // console.log("items", items)
         })
         
         .catch(error => {console.log("axios error in items page :(((")})
