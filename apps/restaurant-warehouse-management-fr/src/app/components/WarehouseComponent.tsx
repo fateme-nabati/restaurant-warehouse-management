@@ -74,8 +74,6 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
   );
 }
 function ItemDetails({item, itemLoaded, itemAmount, setItemAmount} : LoadItemProps) {
-  // const [amount, setAmount] = useState<number>(0);
-  console.log("We are in LoadItem component", item);
   
   if (itemLoaded)
   {
@@ -89,7 +87,6 @@ function ItemDetails({item, itemLoaded, itemAmount, setItemAmount} : LoadItemPro
       <br />
       <Text><strong>Price per Unit: </strong> {item.price_per_unit} T</Text>
       <br />
-      {/* <TextInput label='Amount' placeholder='Please enter amount of item' type='number' value={amount} onChange={(e) => setAmount(parseInt(e.target.value))}></TextInput> */}
       <TextInput label='Amount' placeholder='Please enter amount of item' type='number' value={itemAmount} onChange={(e) => setItemAmount(parseInt(e.target.value))}></TextInput>
       <br />
       <Text><strong>Unit: </strong>{item.unit}</Text>
@@ -103,6 +100,7 @@ function ItemDetails({item, itemLoaded, itemAmount, setItemAmount} : LoadItemPro
 }
 // function AddWarehouseItemModal (props: AddWarehouseItemModalProps) {
 // }
+
 function filterData(data: RowData[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
@@ -148,8 +146,8 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-  const [data, setData] = useState<RowData[]>([{item_name: "", amount: 0, unit: "", price_per_unit: 0, total_price:0, type: ""}]);
-  const [allDataNames, setAllDataNames] = useState<{id: "", name: ""}[]>([{id: "", name: ""}]);
+  const [data, setData] = useState<RowData[]>([{item_name: "", amount: 0, unit: "", price_per_unit: 0, total_price:0, type: ""}]); // all items in specific warehouse
+  const [allDataNames, setAllDataNames] = useState<{id: "", name: ""}[]>([{id: "", name: ""}]); // all items names in system
   const [loading, setLoading] = useState<boolean>(true)
   const [loadingItem, setLoadingItem] = useState<boolean>(false) // loading specific item after searching
   const [itemLoaded, setItemLoaded] = useState<boolean>(false)
@@ -178,13 +176,12 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
     await axios.get('http://localhost:3333/warehouseItems/names')
         .then(res => {
         
-          setAllDataNames(res.data);
-          console.log("allDataNames", allDataNames)
-          console.log("res.data", res.data)
+          setAllDataNames(res.data); 
           setLoading(false);
         })
         
-        .catch(error => {console.log("axios error in getAllDataNames function in warehouse page :(((")})
+        .catch(error => {
+          console.log("axios error in getAllDataNames function in warehouse page :(((")})
   }
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -218,8 +215,6 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
               style: {borderColor: 'green', width: '30rem' },
             });
             getData();
-            console.log("after add exist")
-            console.log('new exist:', newExist)
           
           })
           
@@ -242,22 +237,18 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
   };
 
   const loadItem = async () => { // get item's information
-    console.log("befor load item")
     setLoadingItem(true)
     const item = await allDataNames.filter((item) => {return item.name === itemName[1]})
 
-    console.log("item: ", item)
     const itemId = item[0].id;
-    console.log("itemId: ", itemId)
     await axios.get(`http://localhost:3333/warehouseItems/${itemId}`)
       .then(res => {
         setFoundItem(res.data[0]);
         setLoadingItem(false)
         setItemLoaded(true)
-        console.log("res.data in loadItem", res.data)
-        console.log("found item in loadItem", foundItem)
       })
-      .catch(error => {console.log("axios error in loadItem function in warehouse page :(((")})
+      .catch(error => {
+        console.log("axios error in loadItem function in warehouse page :(((")})
 
   }
   const setSorting = (field: keyof RowData) => {
@@ -325,12 +316,8 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
             <Text ta="center" c="dimmed">__________________________________________</Text>
             <Text>item information:</Text>
             <Space h="md"/>
-            {/* {loadingItem ? 
-              <Loader type="dots" color="grape" /> :
-              <ItemDetails item={foundItem} itemLoaded={itemLoaded} />
-            } */}
-
-              <Loader type="dots" color="grape" /> :
+            
+              <Loader type="dots" color="grape" /> 
               <Space h="md"/>
               <Group justify='center'grow>
                 <Button variant="outline" onClick={handleCloseModal}>
@@ -445,11 +432,7 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
         <Text ta="center" c="dimmed" >__________________________________________</Text>
         <Text>item information:</Text>
         <Space h="md"/>
-        {/* {loadingItem ? 
-          <Loader type="dots" color="grape" /> :
-          <ItemDetails item={foundItem} itemLoaded={itemLoaded} />
-        } */}
-
+       
           <ItemDetails item={foundItem} itemLoaded={itemLoaded} itemAmount={itemAmount} setItemAmount={setItemAmount}/>
           <Space h="md"/>
           <Group justify='center'grow>

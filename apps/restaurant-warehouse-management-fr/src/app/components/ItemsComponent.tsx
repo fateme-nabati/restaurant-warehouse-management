@@ -62,9 +62,7 @@ function filterData(data: RowData[], search: string) {
   return data.filter((item) =>
     Object.keys(item).some((key) => {
       return typeof key === 'string' && key.toLowerCase().includes(query)}));
-      // return data.filter((item) =>
-      //   keys(data[0]).some((key) => typeof key === 'string' && item[key].toLowerCase().includes(query))
-      // );
+     
 }
 
 function sortData(
@@ -114,7 +112,6 @@ export function ItemsComponent(props: ItemsComponentProps) {
   const [type, setType] = useState <string | null>(''); 
 
   const getData = async () => {
-    console.log("befor load data")
     console.log(data);
     setLoading(true);
     await axios.get('http://localhost:3333/warehouseItems')
@@ -122,25 +119,18 @@ export function ItemsComponent(props: ItemsComponentProps) {
           const items: RowData[] = res.data;
           setData(items);
           setSortedData(items)
-          console.log("after load data")
-          // console.log("data", data)
-          // console.log("res.data", res.data)
-          // console.log("items", items)
+          
         })
         
-        .catch(error => {console.log("axios error in items page :(((")})
-
-        setLoading(false);
-        console.log("end of getData function")
-        console.log(data)
+        .catch(error => {
+          console.log("axios error in items page :(((")})
+          setLoading(false);
   }
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
   const handleAddItem = async () => {
-      console.log("befor add item")
-      // event.preventDefault();
-
+  
       // Prepare the data to be sent to the server
       const newItem = {
         name,
@@ -212,15 +202,10 @@ export function ItemsComponent(props: ItemsComponentProps) {
   ));
 
   useEffect(() => {getData()}, []);
-  // useEffect(() => {setSortedData(sortedData)}, [sortedData])
   if(loading){
     console.log("loading")
     return <Loader type="dots" color="grape" />;
   }
-  // if(loaded){
-  //   console.log("loaded")
-  //   return <Loader type="dots" color="grape" />;
-  // }
   return (
     <ScrollArea> 
       <Box style={{ display: 'flex', width: '100%' }}>
