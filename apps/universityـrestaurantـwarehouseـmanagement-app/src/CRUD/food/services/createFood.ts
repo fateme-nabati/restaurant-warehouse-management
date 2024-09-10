@@ -1,3 +1,4 @@
+import { json } from "stream/consumers"
 import { pool } from "../../../db"
 export const createFood = (req, res) => {
     const { name, price } = req.body
@@ -6,7 +7,7 @@ export const createFood = (req, res) => {
       if (error) {
         throw error
       }
-      res.status(201).send(`Food added with ID: ${results.rows[0].id}`)
+      res.status(201).json({...results.rows[0], "message": `Food added with ID: ${results.rows[0].id}`})
     })
   }
 

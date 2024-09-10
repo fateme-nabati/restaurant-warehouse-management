@@ -321,12 +321,61 @@ export function FoodsComponent(props: FoodsComponentProps) {
     setItemName(['']);
   }
 
-  const handleAddFood = () => {
+  const handleAddFood = async () => {
     const newFood = {
       name: foodName,
       price: price,
-      ingredients: ingredients
-    }
+    } 
+    setLoading(true);
+    await axios.post('http://localhost:3333/foods', newFood)
+      .then(async (res) => {          
+        console.log("food added: ",res.data)
+        const foodId = res.data.id;
+        await ingredients.map((item) => {
+          axios.post('http://localhost:3333/ingredients', {...item, food_id: foodId})
+            .then(res => {
+              console.log("ingrdient added: ",res.data)
+            })
+            .catch(error => {
+              setLoading(false)
+              notifications.show({
+                withBorder: true,
+                title: 'Failed to add ingredients to food!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+             }
+            )
+            setLoading(false);
+        })
+        notifications.show({
+          withBorder: true,
+          title: 'Food added successfully!',
+          message: '', 
+          color: 'green',
+          position: 'bottom-left',  
+          style: {borderColor: 'green', width: '30rem' },
+        });
+        getData();
+        console.log("after add food")
+        console.log('new food:', newFood)
+          
+      })
+          
+      .catch(error => {
+
+      setLoading(false);
+      notifications.show({
+                withBorder: true,
+                title: 'Failed to add food!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+            })
     console.log("Food: ", newFood)
     handleCloseModal();
   
