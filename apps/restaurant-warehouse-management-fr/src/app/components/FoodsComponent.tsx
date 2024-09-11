@@ -13,7 +13,9 @@ import {
   Box,
   Space,
   MultiSelect,
-  Loader
+  Loader,
+  ActionIcon,
+  Tooltip
 } from '@mantine/core';
 import {
   IconSelector,
@@ -21,6 +23,9 @@ import {
   IconChevronUp,
   IconSearch,
   IconPlus,
+  IconPencil,
+  IconEraser,
+  IconList,
 } from '@tabler/icons-react';
 import axios from "axios";
 import { notifications } from '@mantine/notifications';
@@ -46,7 +51,7 @@ interface RowAllData {
 }
 interface Ingredient {
   item_id: string;
-  name: string;
+  item_name: string;
   unit: string;
   amount: number;
 }
@@ -119,7 +124,7 @@ function IngredientsDetails ({ingredients} : IngredientsDetailsProps){
     {ingredients.map((item, index) => (
         
       <Group key={index} style={{ marginTop: '10px' }}>
-        <Text><strong>Name: </strong>{item.name}</Text>
+        <Text><strong>Name: </strong>{item.item_name}</Text>
         <br />
         <Text><strong>Amount: </strong>{item.amount}  {item.unit}</Text>
         </Group> 
@@ -167,86 +172,6 @@ function sortData(
     payload.search
   );
 }
-// export const allData = [ // in kole itme hast ke bayad ba get warehouseItems be dast biad
-//   {
-//     name: 'Athena Weissnat',
-//     price: '10000',
-//     unit: 'Elouis',
-//     type: 'food stuff'
-//   },
-//   {
-//     name: 'Deangelo Runolfsson',
-//     price: '1500',
-//     unit: 'Kadin_Trantow87@yahoo.com',
-//     type: 'food stuff'
-//   }
-// ]
-// const data = [
-//   {
-//     name: 'Ghorme sabzi',
-//     price: '10000',
-//   },
-//   {
-//     name: 'Gheyme',
-//     price: '1500',
-//   },
-//   {
-//     name: 'Chicken',
-//     price: '2000',
-//   },
-//   {
-//     name: 'Fish',
-//     price: '27000',
-//   },
-//   {
-//     name: 'Falafel',
-//     price: '30000',
-//   },
-//   {
-//     name: 'Viola Bernhard',
-//     price: '29000',
-//   },
-//   {
-//     name: 'Austin Jacobi',
-//     price: '31000',
-//   },
-//   {
-//     name: 'Hershel Mosciski',
-//     price: '35000',
-//   },
-//   {
-//     name: 'Mylene Ebert',
-//     price: '4000',
-//   },
-//   {
-//     name: 'Lou Trantow',
-//     price: '42000',
-//   },
-//   {
-//     name: 'Dariana Weimann',
-//     price: '45000',
-//   },
-//   {
-//     name: 'Dr. Christy Herman',
-//     price: '12000',
-//   },
-//   {
-//     name: 'Katelin Schuster',
-//     price: '18000',
-//   },
-//   {
-//     name: 'Melyna Macejkovic',
-//     price: '3500',
-//   },
-//   {
-//     name: 'Pinkie Rice',
-//     price: '5000',
-//   },
-//   {
-//     name: 'Brain Kreiger',
-//     price: '21000',
-//   },
-// ];
 
 export function FoodsComponent(props: FoodsComponentProps) {
   const [search, setSearch] = useState('');
@@ -260,12 +185,13 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const [itemLoaded, setItemLoaded] = useState<boolean>(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState<number>(0);
   const [itemName, setItemName] = useState(['']);
   const [itemAmount, setItemAmount] = useState<number>(0); 
   const [foundItem, setFoundItem] = useState<RowAllData>({id: "", name: "", unit: "", price_per_unit: 0, type: ""});
-  const [ingredients, setIngredients] = useState <{item_id: string,name: string, unit: string, amount: number}[]>([]);
+  const [ingredients, setIngredients] = useState <{item_id: string,item_name: string, unit: string, amount: number}[]>([]);
   
 
   const getData = async () => {
@@ -320,7 +246,15 @@ export function FoodsComponent(props: FoodsComponentProps) {
     setItemLoaded(false)
     setItemName(['']);
   }
-
+  const handleOpenModal3 = () => {
+      setIsModalOpen3(true);
+    }
+    const handleCloseModal3 = () => {
+      setIsModalOpen3(false); 
+      setFoodName('');
+      setPrice(0);
+      setIngredients([]);
+    }
   const handleAddFood = async () => {
     const newFood = {
       name: foodName,
@@ -383,7 +317,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const handleAddIngridient = async  () => {
     setLoading(true)
     console.log("ingredients 1", ingredients)
-    await setIngredients([...ingredients, {item_id: foundItem.id, name: foundItem.name, unit: foundItem.unit, amount: itemAmount}]);
+    await setIngredients([...ingredients, {item_id: foundItem.id, item_name: foundItem.name, unit: foundItem.unit, amount: itemAmount}]);
     setLoading(false)
     console.log("ingredients 2", ingredients)
     handleCloseModal2();
@@ -421,10 +355,69 @@ export function FoodsComponent(props: FoodsComponentProps) {
     );
   };
 
+  const showIngredients = (food_id: string, food_name: string) => {
+    setLoading(true);
+    axios.get(`http://localhost:3333/ingredients/food/${food_id}`)
+      .then(res =>{
+        console.log("show ingredients: ", res.data)
+        // if(res.data.length > 0) {
+          setFoodName(food_name);
+          setIngredients(res.data);
+          setLoading(false);
+          handleOpenModal3();
+        // }
+        // else {
+        //   setFoodName("No ingredients")
+        //   setLoading(false);
+        //   handleOpenModal3();
+        // }
+        // <Modal 
+        //   opened={isModalOpen3}
+        //   onClose={handleCloseModal3}
+        //   title="Food ingredients"> 
+        //   <Box style={{ display: 'flex', flexDirection: 'column' }}>     
+        //     <Text c='blue'>{foodName}'s ingredients:</Text>
+        //     <Space h="md" />
+        //     <IngredientsDetails ingredients={ingredients}/>
+        //   </Box>
+        // </Modal>
+      })
+      .catch(error => {
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Failed to show ingredients!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
+  }
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
       <Table.Td>{row.price}</Table.Td>
+      <Table.Td style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+      <Group>
+        <Tooltip label="View Ingredients" position="top">
+          <ActionIcon variant="outline" color='gray' size='sm' onClick={() => showIngredients(row.id, row.name)} >
+            <IconList size={12} stroke={1.5} />
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="Edit Food" position="top">
+          <ActionIcon variant="outline" color='gray' size='sm'>
+            <IconPencil size={12} stroke={1.5} />
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="Delete Food" position="top">
+          <ActionIcon variant="outline" color='gray' size='sm'>
+            <IconEraser size={12} stroke={1.5} />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
+      </Table.Td>
+      {/* <IconDetails onClick={showIngredients(row.id)}></IconDetails> */}
     </Table.Tr>
   ));
   useEffect(() => {getData()}, []);
@@ -561,7 +554,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
           </Box>
         </Modal>
       </Box>
-
+         
       <Table
         horizontalSpacing="md"
         verticalSpacing="xs"
@@ -731,7 +724,22 @@ export function FoodsComponent(props: FoodsComponentProps) {
           </Box>
         </Modal>
       </Box>
-
+      <Modal 
+        opened={isModalOpen3}
+        onClose={handleCloseModal3}
+        title="Food Ingredients"
+      >
+        <Box style={{ display: 'flex', flexDirection: 'column' }}>
+          <>
+            <Text c='blue'>{foodName}'s ingredients:</Text>
+            <Space h="md" />
+            {/* <IngredientsDetails ingredients={ingredients} /> */}
+            {ingredients.length > 0 ? 
+            <IngredientsDetails ingredients={ingredients} /> : <Text>No ingredient</Text>}
+          </>
+          
+        </Box>
+      </Modal>
       <Table
         horizontalSpacing="md"
         verticalSpacing="xs"
