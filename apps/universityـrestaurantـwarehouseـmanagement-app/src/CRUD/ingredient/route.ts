@@ -6,6 +6,7 @@ import { getIngredientByFoodIdAndItemId } from "./services/getIngredientByFoodId
 import { createIngredient } from "./services/createIngredient"
 import { updateIngredient } from "./services/updateIngredient";
 import { deleteIngredient } from "./services/deleteIngredient";
+import { deleteIngredientsByFoodId } from "./services/deleteIngredientsByFoodId";
 import * as express from 'express';
 const router = express.Router();
 
@@ -16,6 +17,8 @@ router.get('/:food_id/:item_id', getIngredientByFoodIdAndItemId);
 router.post('/', createIngredient);
 router.put('/:food_id/:item_id', updateIngredient);
 router.delete('/:food_id/:item_id', deleteIngredient);
+router.delete('/food/:food_id', deleteIngredientsByFoodId)
+// router.delete('/food/:food_id', deleteIngredientsByFoodId);
 
 module.exports = router;
 

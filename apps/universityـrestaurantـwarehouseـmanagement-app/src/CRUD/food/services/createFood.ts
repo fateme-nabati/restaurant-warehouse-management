@@ -1,4 +1,3 @@
-import { json } from "stream/consumers"
 import { pool } from "../../../db"
 export const createFood = (req, res) => {
     const { name, price } = req.body

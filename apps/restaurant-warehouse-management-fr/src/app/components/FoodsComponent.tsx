@@ -180,12 +180,15 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const [data, setData] = useState<RowData[]>([{id:"", name: "", price:0}]); // all items in specific warehouse
   const [sortedData, setSortedData] = useState(data);
   const [allDataNames, setAllDataNames] = useState<{id: string, name: string}[]>([{id: "", name: ""}]); // all items names in system
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
   const [loadingItem, setLoadingItem] = useState<boolean>(false) // loading specific item after searching
-  const [itemLoaded, setItemLoaded] = useState<boolean>(false)
+  const [itemLoaded, setItemLoaded] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen2, setIsModalOpen2] = useState(false);
-  const [isModalOpen3, setIsModalOpen3] = useState(false);
+  const [modalType, setModalType] = useState<string>('add'); // add or edit food information
+  const [isModalOpen2, setIsModalOpen2] = useState(false); // add ingredient to food
+  const [isModalOpen3, setIsModalOpen3] = useState(false); // show food's ingredient
+  const [isModalOpen4, setIsModalOpen4] = useState(false); // confirm to delete food
+  const [foodId, setFoodId] = useState('');
   const [foodName, setFoodName] = useState('');
   const [price, setPrice] = useState<number>(0);
   const [itemName, setItemName] = useState(['']);
@@ -235,6 +238,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
     setFoodName('');
     setPrice(0);
     setIngredients([]);
+    setModalType("add");
   }
 
   const handleOpenModal2 = () => {
@@ -255,6 +259,16 @@ export function FoodsComponent(props: FoodsComponentProps) {
       setPrice(0);
       setIngredients([]);
     }
+    const handleOpenModal4 = (food_id: string, food_name: string) => {
+      setFoodId(food_id);
+      setFoodName(food_name);
+      setIsModalOpen4(true);
+   
+  }
+  const handleCloseModal4 = () => {
+    setIsModalOpen4(false); 
+    setFoodName('');
+  }
   const handleAddFood = async () => {
     const newFood = {
       name: foodName,
@@ -314,6 +328,111 @@ export function FoodsComponent(props: FoodsComponentProps) {
     handleCloseModal();
   
   };
+
+  const handleEditFood = async () => {
+    const editedFood = {
+      name: foodName,
+      price: price,
+    } 
+    setLoading(true);
+    await axios.put(`http://localhost:3333/foods/${foodId}`, editedFood)
+      .then(async (res) => {          
+        console.log("food edited: ",res.data)
+        // const foodId = res.data.id;
+        await axios.delete(`http://localhost:3333/ingredients/food/${foodId}`)
+          .then(async (res) => {
+            await ingredients.map((item) => {
+            axios.post('http://localhost:3333/ingredients/', {...item, food_id: foodId})
+              .then(res => {
+                console.log("ingrdient edited: ",res.data)
+              })
+              .catch(error => {
+                setLoading(false)
+                notifications.show({
+                  withBorder: true,
+                  title: 'Failed to edit ingredients!',
+                  message: JSON.stringify(error.response?.data), 
+                  color: 'red',
+                  position: 'bottom-left',
+                  style: {borderColor: 'red', width: '30rem' },
+                });
+              })
+              
+          })
+          setLoading(false); // food edited and all ingredients added seccessfully
+          notifications.show({
+            withBorder: true,
+            title: 'Food edited successfully!',
+            message: '', 
+            color: 'green',
+            position: 'bottom-left',  
+            style: {borderColor: 'green', width: '30rem' },
+          });
+          getData();
+          console.log("after edit food")
+          console.log('edited food:', editedFood)
+            
+        })
+        .catch(error => {
+          setLoading(false);
+          notifications.show({
+                withBorder: true,
+                title: 'Failed to delete ingredients!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+        })
+      })
+      .catch(error => {
+
+        setLoading(false);
+        notifications.show({
+                withBorder: true,
+                title: 'Failed to edit food!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+            })
+        
+          
+      
+    console.log("Food: ", editedFood)
+    handleCloseModal();
+  
+  }
+  const handleDeleteFood = () => {
+    setLoading(true);
+    axios.delete(`http://localhost:3333/foods/${foodId}`)
+      .then(res =>{
+        console.log("delete food: ", res.data)
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Food deleted successfully!',
+          message: '', 
+          color: 'green',
+          position: 'bottom-left',
+          style: {borderColor: 'green', width: '30rem' },
+        });
+        getData();
+      })
+      .catch(error => {
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Failed to delete food!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
+      handleCloseModal4();
+  }
   const handleAddIngridient = async  () => {
     setLoading(true)
     console.log("ingredients 1", ingredients)
@@ -354,33 +473,17 @@ export function FoodsComponent(props: FoodsComponentProps) {
       sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
     );
   };
-
+ 
   const showIngredients = (food_id: string, food_name: string) => {
     setLoading(true);
     axios.get(`http://localhost:3333/ingredients/food/${food_id}`)
       .then(res =>{
         console.log("show ingredients: ", res.data)
-        // if(res.data.length > 0) {
           setFoodName(food_name);
           setIngredients(res.data);
           setLoading(false);
           handleOpenModal3();
-        // }
-        // else {
-        //   setFoodName("No ingredients")
-        //   setLoading(false);
-        //   handleOpenModal3();
-        // }
-        // <Modal 
-        //   opened={isModalOpen3}
-        //   onClose={handleCloseModal3}
-        //   title="Food ingredients"> 
-        //   <Box style={{ display: 'flex', flexDirection: 'column' }}>     
-        //     <Text c='blue'>{foodName}'s ingredients:</Text>
-        //     <Space h="md" />
-        //     <IngredientsDetails ingredients={ingredients}/>
-        //   </Box>
-        // </Modal>
+        
       })
       .catch(error => {
         setLoading(false);
@@ -393,7 +496,35 @@ export function FoodsComponent(props: FoodsComponentProps) {
           style: {borderColor: 'red', width: '30rem' },
         });
       })
+  } 
+  const editFood = (food_id: string, food_name: string, food_price: number) => {
+    setLoading(true);
+    axios.get(`http://localhost:3333/ingredients/food/${food_id}`)
+      .then(res =>{
+        console.log("edit food: ", res.data)
+          setFoodId(food_id)
+          setFoodName(food_name);
+          setPrice(food_price);
+          setIngredients(res.data);
+          setModalType("edit");
+          setLoading(false);
+          handleOpenModal();
+        
+      })
+      .catch(error => {
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Failed to edit food!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
   }
+
+  
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
@@ -406,18 +537,17 @@ export function FoodsComponent(props: FoodsComponentProps) {
           </ActionIcon>
         </Tooltip>
         <Tooltip label="Edit Food" position="top">
-          <ActionIcon variant="outline" color='gray' size='sm'>
+          <ActionIcon variant="outline" color='gray' size='sm' onClick={() => editFood(row.id, row.name, row.price)}>
             <IconPencil size={12} stroke={1.5} />
           </ActionIcon>
         </Tooltip>
-        <Tooltip label="Delete Food" position="top">
+        <Tooltip label="Delete Food" position="top" onClick={() => handleOpenModal4(row.id, row.name)}>
           <ActionIcon variant="outline" color='gray' size='sm'>
             <IconEraser size={12} stroke={1.5} />
           </ActionIcon>
         </Tooltip>
       </Group>
       </Table.Td>
-      {/* <IconDetails onClick={showIngredients(row.id)}></IconDetails> */}
     </Table.Tr>
   ));
   useEffect(() => {getData()}, []);
@@ -460,7 +590,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
         <Modal
           opened={isModalOpen}
           onClose={handleCloseModal}
-          title="Add a food"
+          title="Add/Edit a food"
         >
           <Box style={{ display: 'flex', flexDirection: 'column' }}>
             <TextInput
@@ -535,7 +665,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
               </Button>
               <Button variant="filled" onClick={handleAddIngridient}>
                   Add
-                </Button>
+              </Button>
             </Group>
 
             </Box>
@@ -547,9 +677,17 @@ export function FoodsComponent(props: FoodsComponentProps) {
               <Button variant="outline" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button variant="filled" onClick={handleAddFood}>
+              {
+                modalType === 'add' ?
+                <Button variant="filled" onClick={handleAddFood}>
                 Add
-              </Button>
+                </Button> :
+                <Button variant="filled" onClick={handleEditFood}>
+                Edit
+                </Button>
+
+              }
+              
             </Group>
           </Box>
         </Modal>
@@ -630,7 +768,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
         <Modal
           opened={isModalOpen}
           onClose={handleCloseModal}
-          title="Add a food"
+          title="Add/Edit a food"
         >
           <Box style={{ display: 'flex', flexDirection: 'column' }}>
             <TextInput
@@ -712,14 +850,21 @@ export function FoodsComponent(props: FoodsComponentProps) {
             </Modal>
 
             <Space h="md" />
-            {/* <Text ta='center'>________________________________________</Text> */}
             <Group justify="center" grow>
               <Button variant="outline" onClick={handleCloseModal}>
                 Cancel
               </Button>
-              <Button variant="filled" onClick={handleAddFood}>
+              {
+                modalType === 'add' ?
+                <Button variant="filled" onClick={handleAddFood}>
                 Add
-              </Button>
+                </Button> :
+                <Button variant="filled" onClick={handleEditFood}>
+                Edit
+                </Button>
+
+              }
+             
             </Group>
           </Box>
         </Modal>
@@ -733,9 +878,30 @@ export function FoodsComponent(props: FoodsComponentProps) {
           <>
             <Text c='blue'>{foodName}'s ingredients:</Text>
             <Space h="md" />
-            {/* <IngredientsDetails ingredients={ingredients} /> */}
             {ingredients.length > 0 ? 
             <IngredientsDetails ingredients={ingredients} /> : <Text>No ingredient</Text>}
+          </>
+          
+        </Box>
+      </Modal>
+      <Modal 
+        opened={isModalOpen4}
+        onClose={handleCloseModal4}
+        title="Confirm delete food"
+      >
+        <Box style={{ display: 'flex', flexDirection: 'column' }}>
+          <>
+            <Text>Are you sure to delete "{foodName}" and its information?</Text>
+            <Space h="md" />
+            <Group justify="center" grow>
+              <Button variant="outline" color="gray" onClick={handleCloseModal4}>
+                Cancel
+              </Button>
+             
+              <Button variant="filled" color='red' onClick={handleDeleteFood}>
+              Delete
+              </Button>   
+            </Group>
           </>
           
         </Box>
