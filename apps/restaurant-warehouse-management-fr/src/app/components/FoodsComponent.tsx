@@ -15,7 +15,8 @@ import {
   MultiSelect,
   Loader,
   ActionIcon,
-  Tooltip
+  Tooltip,
+  CloseButton
 } from '@mantine/core';
 import {
   IconSelector,
@@ -26,6 +27,7 @@ import {
   IconPencil,
   IconEraser,
   IconList,
+  IconMultiplier1x,
 } from '@tabler/icons-react';
 import axios from "axios";
 import { notifications } from '@mantine/notifications';
@@ -119,6 +121,7 @@ function ItemDetails({item, itemLoaded, itemAmount, setItemAmount} : LoadItemPro
 }
 
 function IngredientsDetails ({ingredients} : IngredientsDetailsProps){  
+  
   return (
     <>
     {ingredients.map((item, index) => (
@@ -195,6 +198,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
   const [itemAmount, setItemAmount] = useState<number>(0); 
   const [foundItem, setFoundItem] = useState<RowAllData>({id: "", name: "", unit: "", price_per_unit: 0, type: ""});
   const [ingredients, setIngredients] = useState <{item_id: string,item_name: string, unit: string, amount: number}[]>([]);
+  const [newIngredients, setNewIngredients] = useState <{item_id: string,item_name: string, unit: string, amount: number}[]>([]);
   
 
   const getData = async () => {
@@ -238,6 +242,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
     setFoodName('');
     setPrice(0);
     setIngredients([]);
+    setNewIngredients([]);
     setModalType("add");
   }
 
@@ -258,6 +263,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
       setFoodName('');
       setPrice(0);
       setIngredients([]);
+      setNewIngredients([]);
     }
     const handleOpenModal4 = (food_id: string, food_name: string) => {
       setFoodId(food_id);
@@ -276,9 +282,12 @@ export function FoodsComponent(props: FoodsComponentProps) {
     } 
     setLoading(true);
     await axios.post('http://localhost:3333/foods', newFood)
-      .then(async (res) => {          
+      .then(async (res) => {   
+        setLoading(false)       
         console.log("food added: ",res.data)
-        const foodId = res.data.id;
+        // const foodId = res.data.id;
+        setFoodId(res.data.id)
+        setLoading(true)
         await ingredients.map((item) => {
           axios.post('http://localhost:3333/ingredients', {...item, food_id: foodId})
             .then(res => {
@@ -330,6 +339,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
   };
 
   const handleEditFood = async () => {
+
     const editedFood = {
       name: foodName,
       price: price,
@@ -339,11 +349,9 @@ export function FoodsComponent(props: FoodsComponentProps) {
       .then(async (res) => {          
         console.log("food edited: ",res.data)
         // const foodId = res.data.id;
-        await axios.delete(`http://localhost:3333/ingredients/food/${foodId}`)
-          .then(async (res) => {
-            await ingredients.map((item) => {
-            axios.post('http://localhost:3333/ingredients/', {...item, food_id: foodId})
-              .then(res => {
+        await newIngredients.map((item) => {
+        axios.post('http://localhost:3333/ingredients/', {...item, food_id: foodId})
+          .then(res => {
                 console.log("ingrdient edited: ",res.data)
               })
               .catch(error => {
@@ -370,36 +378,20 @@ export function FoodsComponent(props: FoodsComponentProps) {
           });
           getData();
           console.log("after edit food")
-          console.log('edited food:', editedFood)
-            
-        })
-        .catch(error => {
-          setLoading(false);
-          notifications.show({
-                withBorder: true,
-                title: 'Failed to delete ingredients!',
-                message: JSON.stringify(error.response?.data), 
-                color: 'red',
-                position: 'bottom-left',
-                style: {borderColor: 'red', width: '30rem' },
-              });
-        })
+          console.log('edited food:', editedFood)      
       })
       .catch(error => {
 
         setLoading(false);
         notifications.show({
-                withBorder: true,
-                title: 'Failed to edit food!',
-                message: JSON.stringify(error.response?.data), 
-                color: 'red',
-                position: 'bottom-left',
-                style: {borderColor: 'red', width: '30rem' },
-              });
-            })
-        
-          
-      
+          withBorder: true,
+          title: 'Failed to edit food!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
     console.log("Food: ", editedFood)
     handleCloseModal();
   
@@ -437,12 +429,35 @@ export function FoodsComponent(props: FoodsComponentProps) {
     setLoading(true)
     console.log("ingredients 1", ingredients)
     await setIngredients([...ingredients, {item_id: foundItem.id, item_name: foundItem.name, unit: foundItem.unit, amount: itemAmount}]);
+    if (modalType === 'edit') {
+      await setNewIngredients([...newIngredients, {item_id: foundItem.id, item_name: foundItem.name, unit: foundItem.unit, amount: itemAmount}]);
+    }
     setLoading(false)
     console.log("ingredients 2", ingredients)
     handleCloseModal2();
     setItemName(['']);
     setItemAmount(0);
   };
+
+  const handleDeleteIngredient = async (item_id: string) => {
+    setLoading(true);
+    axios.delete(`http://localhost:3333/ingredients/${foodId}/${item_id}`)
+      .then(res =>{
+        setIngredients(ingredients.filter((item) => item.item_id !== item_id));
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Failed to delete ingredient!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
+  }
   const loadItem = async () => { // get item's information
     setLoadingItem(true)
     const item = await allDataNames.filter((item) => {return item.name === itemName[1]})
@@ -630,8 +645,22 @@ export function FoodsComponent(props: FoodsComponentProps) {
             <Text ta="center" c="dimmed">__________________________________________</Text>
             <Text>item information:</Text>
             <Space h="md"/>
-
-            <IngredientsDetails ingredients={ingredients} />
+            <>
+            {ingredients.map((item, index) => (
+                
+              <Group key={index} style={{ marginTop: '10px' }}>
+                <Text><strong>Name: </strong>{item.item_name}</Text>
+                <br />
+                <Text><strong>Amount: </strong>{item.amount}  {item.unit}</Text>
+                <CloseButton onClick={() => handleDeleteIngredient(item.item_id)}/>
+                {/* <ActionIcon>
+                  <IconMultiplier1x></IconMultiplier1x>
+                </ActionIcon> */}
+                </Group> 
+                
+            ))}
+            </>
+            {/* <IngredientsDetails ingredients={ingredients} /> */}
 
             <Modal opened={isModalOpen2} onClose={handleCloseModal2} title="Add an ingridient">
             <Box style={{ display: 'flex', flexDirection: 'column' }}> 
@@ -809,7 +838,22 @@ export function FoodsComponent(props: FoodsComponentProps) {
             <Text ta="center" c="dimmed">__________________________________________</Text>
             <Text>item information:</Text>
             <Space h="md"/>
-            <IngredientsDetails ingredients={ingredients} />
+            <>
+            {ingredients.map((item, index) => (
+                
+              <Group key={index} style={{ marginTop: '10px' }}>
+                <Text><strong>Name: </strong>{item.item_name}</Text>
+                <br />
+                <Text><strong>Amount: </strong>{item.amount}  {item.unit}</Text>
+                <CloseButton onClick={() => handleDeleteIngredient(item.item_id)}/>
+                {/* <ActionIcon>
+                  <IconMultiplier1x></IconMultiplier1x>
+                </ActionIcon> */}
+                </Group> 
+                
+            ))}
+            </>
+            {/* <IngredientsDetails ingredients={ingredients} /> */}
 
             <Modal opened={isModalOpen2} onClose={handleCloseModal2} title="Add an ingridient">
             <Box style={{ display: 'flex', flexDirection: 'column' }}> 
