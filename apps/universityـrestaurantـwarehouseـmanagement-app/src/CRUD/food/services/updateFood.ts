@@ -10,7 +10,7 @@ export const updateFood = (req, res) => {
         if (error) {
           throw error
         }
-        res.status(200).json({...results.rows[0], "message": `Food added with ID: ${results.rows[0].id}`})
+        res.status(200).json({...results.rows[0], "message": `Food modified with ID: ${id}`})
       }
     )
   }

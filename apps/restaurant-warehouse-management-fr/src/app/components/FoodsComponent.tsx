@@ -285,11 +285,10 @@ export function FoodsComponent(props: FoodsComponentProps) {
       .then(async (res) => {   
         setLoading(false)       
         console.log("food added: ",res.data)
-        // const foodId = res.data.id;
         setFoodId(res.data.id)
         setLoading(true)
         await ingredients.map((item) => {
-          axios.post('http://localhost:3333/ingredients', {...item, food_id: foodId})
+          axios.post('http://localhost:3333/ingredients', {...item, food_id: res.data.id})
             .then(res => {
               console.log("ingrdient added: ",res.data)
             })
@@ -345,10 +344,12 @@ export function FoodsComponent(props: FoodsComponentProps) {
       price: price,
     } 
     setLoading(true);
+    console.log("foodId in handleEditFood", foodId)
     await axios.put(`http://localhost:3333/foods/${foodId}`, editedFood)
       .then(async (res) => {          
         console.log("food edited: ",res.data)
         // const foodId = res.data.id;
+        console.log("new ingredient:", newIngredients)
         await newIngredients.map((item) => {
         axios.post('http://localhost:3333/ingredients/', {...item, food_id: foodId})
           .then(res => {
@@ -444,6 +445,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
     axios.delete(`http://localhost:3333/ingredients/${foodId}/${item_id}`)
       .then(res =>{
         setIngredients(ingredients.filter((item) => item.item_id !== item_id));
+        setNewIngredients(newIngredients.filter((item) => item.item_id !== item_id));
         setLoading(false);
       })
       .catch(error => {
@@ -525,12 +527,13 @@ export function FoodsComponent(props: FoodsComponentProps) {
           setLoading(false);
           handleOpenModal();
         
+          console.log("foodId in editFood", foodId)
       })
       .catch(error => {
         setLoading(false);
         notifications.show({
           withBorder: true,
-          title: 'Failed to edit food!',
+          title: 'Failed to open "edit food" modal!',
           message: JSON.stringify(error.response?.data), 
           color: 'red',
           position: 'bottom-left',
