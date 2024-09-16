@@ -13,9 +13,11 @@ import {
   Modal,
   MultiSelect,
   Space,
-  Loader
+  Loader,
+  ActionIcon,
+  Tooltip,
 } from '@mantine/core';
-import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus } from '@tabler/icons-react';
+import { IconSelector, IconChevronDown, IconChevronUp, IconSearch, IconPlus, IconPencil, IconEraser } from '@tabler/icons-react';
 import axios from "axios"
 import { notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
@@ -26,7 +28,12 @@ import classes from './WarehouseComponent.module.css';
 /* eslint-disable-next-line */
 export interface WarehouseComponentProps {}
 
+interface Warehouse {
+  id: string;
+  name: string;
+}
 interface RowData {
+  item_id: string;
   item_name: string;
   unit: string;
   amount: number;
@@ -143,24 +150,29 @@ function sortData(
 
 
 export function WarehouseComponent(props: WarehouseComponentProps) {
+  const [warehouse, setWarehouse] = useState<Warehouse>({id: "1", name: "warehouse 1"});
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-  const [data, setData] = useState<RowData[]>([{item_name: "", amount: 0, unit: "", price_per_unit: 0, total_price:0, type: ""}]); // all items in specific warehouse
+  const [data, setData] = useState<RowData[]>([{item_id: "",item_name: "", amount: 0, unit: "", price_per_unit: 0, total_price:0, type: ""}]); // all items in specific warehouse
+  // const [foundData, setFoundData] = useState<RowData>({item_id: "",item_name: "", amount: 0, unit: "", price_per_unit: 0, total_price:0, type: ""}); // found item in delete item modal 
   const [allDataNames, setAllDataNames] = useState<{id: "", name: ""}[]>([{id: "", name: ""}]); // all items names in system
   const [loading, setLoading] = useState<boolean>(true)
   const [loadingItem, setLoadingItem] = useState<boolean>(false) // loading specific item after searching
   const [itemLoaded, setItemLoaded] = useState<boolean>(false)
   const [sortedData, setSortedData] = useState<RowData[]>(data);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // add / edit item
+  const [modalType, setModalType] = useState<string>('add'); // add or edit food information
+  const [isModalOpen2, setIsModalOpen2] = useState<boolean>(false); // confirm delete item from warehouse
+  const [itemId, setItemId] = useState<string>(''); // for search item based on name
   const [itemName, setItemName] = useState<string[]>(['']); // for search item based on name
   const [itemAmount, setItemAmount] = useState<number>(0); 
-  const [foundItem, setFoundItem] = useState<RowAllData>({id: "", name: "", unit: "", price_per_unit: 0, type: ""});
+  const [foundItem, setFoundItem] = useState<RowAllData>({id: "", name: "", unit: "", price_per_unit: 0, type: ""}); // found item in add item modal 
   
  
   const getData = async () => { // get items that are in specific warehouse
     setLoading(true);
-    await axios.get('http://localhost:3333/exist/warehouse/1')
+    await axios.get(`http://localhost:3333/exist/warehouse/${warehouse.id}`)
         .then(res => {
         
           setData(res.data);
@@ -189,14 +201,43 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
   }
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setItemLoaded(false)
+    setItemLoaded(false);
     setItemName(['']);
     setItemAmount(0);
+    setItemLoaded(false);
+    setModalType("add");
   }
-
-  const handleAddItem = async () => {
+const handleOpenModal2 = () => {
+    // setFoodId(food_id);
+    // setFoodName(food_name);
+    setIsModalOpen2(true);
+   
+  }
+  const handleCloseModal2 = () => {
+    console.log("We are in handleCloseModal2")
+    setIsModalOpen2(false); 
+    setItemId('');
+    setItemName(['']);
+  }
+  const editItem = (item: RowAllData, item_amount: number) => {
+    console.log("We are in editItem")
+    setItemId(item.id)
+    setFoundItem(item)
+    setItemAmount(item_amount)
+    setItemLoaded(true)
+    setModalType("edit");
+    handleOpenModal();
+  }
+  const deleteItem = (item_id: string, item_name: string) => {
+    console.log("We are in deleteItem")
+    // setFoundData(found_data)
+    setItemId(item_id)
+    setItemName([item_name])
+    handleOpenModal2()
+  }
+const handleAddItem = async () => {
     const newExist = {
-        warehouse_id: 1,
+        warehouse_id: warehouse.id,
         item_id: foundItem.id,
         amount: itemAmount,
         unit: foundItem.unit,
@@ -235,7 +276,80 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
     setFoundItem({id: "", name: "", unit: "", price_per_unit: 0, type: ""}); // Reset form after adding
   
   };
+  const handleEditItem = async () => {
+    const newExist = {
+        warehouse_id: warehouse.id,
+        item_id: foundItem.id,
+        amount: itemAmount,
+        unit: foundItem.unit,
+      };
+      setLoading(true);
+      await axios.put(`http://localhost:3333/exist/${warehouse.id}/${itemId}`, newExist)
+          .then(res => {  
+            setLoading(false);
+           
+            notifications.show({
+              withBorder: true,
+              title: 'Item edited successfully!',
+              message: '', 
+              color: 'green',
+              position: 'bottom-left',
+              style: {borderColor: 'green', width: '30rem' },
+            });
+            getData();
+          
+          })
+          
+            .catch(error => {
 
+              setLoading(false);
+              notifications.show({
+                withBorder: true,
+                title: 'Failed to edit item!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+            })
+    
+    handleCloseModal();
+    setFoundItem({id: "", name: "", unit: "", price_per_unit: 0, type: ""}); // Reset form after editing
+  
+  };
+
+  const handleDeleteItem = () => {
+    setLoading(true);
+    axios.delete(`http://localhost:3333/exist/${warehouse.id}/${itemId}`)
+      .then(res =>{
+        console.log("delete item: ", res.data)
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Item deleted successfully!',
+          message: '', 
+          color: 'green',
+          position: 'bottom-left',
+          style: {borderColor: 'green', width: '30rem' },
+        });
+        getData();
+      })
+      .catch(error => {
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Failed to delete item!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
+    setLoading(false)
+    handleCloseModal2();
+  }
+  
+  
   const loadItem = async () => { // get item's information
     setLoadingItem(true)
     const item = await allDataNames.filter((item) => {return item.name === itemName[1]})
@@ -264,17 +378,32 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
     setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection, search: value }));
   };
 
-  const rows = sortedData.map((row) => (
-    <Table.Tr key={row.item_name}>
+  const rows = sortedData.map((row) => {
+    return (
+    <Table.Tr key={row.item_id}>
       <Table.Td>{row.item_name}</Table.Td>
       <Table.Td>{row.amount}</Table.Td>
       <Table.Td>{row.unit}</Table.Td>
       <Table.Td>{row.price_per_unit}</Table.Td>
       <Table.Td>{row.total_price}</Table.Td>
       <Table.Td>{row.type}</Table.Td>
+      <Table.Td style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+      <Group>
+        <Tooltip label="Edit Item" position="top">
+          <ActionIcon variant="outline" color='gray' size='sm' onClick={() => editItem({id: row.item_id, name: row.item_name, unit: row.unit, price_per_unit: row.price_per_unit, type: row.type}, row.amount)}>
+            <IconPencil size={12} stroke={1.5} />
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip label="Delete Item" position="top" onClick={() => deleteItem(row.item_id, row.item_name)}>
+          <ActionIcon variant="outline" color='gray' size='sm'>
+            <IconEraser size={12} stroke={1.5} />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
+      </Table.Td>
     </Table.Tr>
-  ));
-
+  )
+})
   useEffect(() => {getData()}, []);
   if(loading){
     console.log("loading")
@@ -330,7 +459,28 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
 
             </Box>
           </Modal>
-        
+          <Modal 
+            opened={isModalOpen2}
+            onClose={handleCloseModal2}
+            title="Confirm delete item from warehouse"
+          >
+            <Box style={{ display: 'flex', flexDirection: 'column' }}>
+              <>
+                <Text>Are you sure to delete "{itemName[0]}" from warehouse "{warehouse.name}" ?</Text>
+                <Space h="md" />
+                <Group justify="center" grow>
+                  <Button variant="outline" color="gray" onClick={handleCloseModal2}>
+                    Cancel
+                  </Button>
+                
+                  <Button variant="filled" color='red' onClick={handleDeleteItem}>
+                  Delete
+                  </Button>   
+                </Group>
+              </>
+              
+            </Box>
+          </Modal>
           </Box>
 
           <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
@@ -409,9 +559,9 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
         style={{ width: '85%' }}
       />      
       <Button variant="filled" color="green" size="md-compact" ml={50}  leftSection={<IconPlus style={{ width: rem(16), height: rem(16) }} stroke={2} />} onClick={handleOpenModal} >Add</Button>
+      { modalType === 'add' ?
       <Modal opened={isModalOpen} onClose={handleCloseModal} title="Add an item to warehouse">
         <Box style={{ display: 'flex', flexDirection: 'column' }}> 
-         
           <MultiSelect
           label=" Please choose just one item and then click on search button"
           placeholder="Search an item"
@@ -431,6 +581,7 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
         <Space h="md"/>
         <Text ta="center" c="dimmed" >__________________________________________</Text>
         <Text>item information:</Text>
+       
         <Space h="md"/>
        
           <ItemDetails item={foundItem} itemLoaded={itemLoaded} itemAmount={itemAmount} setItemAmount={setItemAmount}/>
@@ -444,9 +595,46 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
             </Button>
           </Group>
 
+        </Box> 
+      </Modal> :
+
+      <Modal opened={isModalOpen} onClose={handleCloseModal} title="Edit an item in warehouse">
+        <Box style={{ display: 'flex', flexDirection: 'column' }}> 
+          <ItemDetails item={foundItem} itemLoaded={itemLoaded} itemAmount={itemAmount} setItemAmount={setItemAmount}/>
+          <Space h="md"/>
+          <Group justify='center'grow>
+            <Button variant="outline" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            <Button variant="filled" onClick={handleEditItem}>
+              Add
+            </Button>
+          </Group>
         </Box>
       </Modal>
-     
+        }
+      <Modal 
+            opened={isModalOpen2}
+            onClose={handleCloseModal2}
+            title="Confirm delete item from warehouse"
+          >
+            <Box style={{ display: 'flex', flexDirection: 'column' }}>
+              <>
+                <Text>Are you sure to delete "{itemName[0]}" from warehouse "{warehouse.name}" ?</Text>
+                <Space h="md" />
+                <Group justify="center" grow>
+                  <Button variant="outline" color="gray" onClick={handleCloseModal2}>
+                    Cancel
+                  </Button>
+                
+                  <Button variant="filled" color='red' onClick={handleDeleteItem}>
+                  Delete
+                  </Button>   
+                </Group>
+              </>
+              
+            </Box>
+          </Modal>
       </Box>
 
       <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">

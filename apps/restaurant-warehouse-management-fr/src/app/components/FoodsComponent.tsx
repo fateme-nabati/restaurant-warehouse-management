@@ -27,7 +27,6 @@ import {
   IconPencil,
   IconEraser,
   IconList,
-  IconMultiplier1x,
 } from '@tabler/icons-react';
 import axios from "axios";
 import { notifications } from '@mantine/notifications';
@@ -265,9 +264,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
       setIngredients([]);
       setNewIngredients([]);
     }
-    const handleOpenModal4 = (food_id: string, food_name: string) => {
-      setFoodId(food_id);
-      setFoodName(food_name);
+    const handleOpenModal4 = () => { 
       setIsModalOpen4(true);
    
   }
@@ -275,6 +272,93 @@ export function FoodsComponent(props: FoodsComponentProps) {
     setIsModalOpen4(false); 
     setFoodName('');
   }
+  const setSorting = (field: keyof RowData) => {
+    const reversed = field === sortBy ? !reverseSortDirection : false;
+    setReverseSortDirection(reversed);
+    setSortBy(field);
+    setSortedData(sortData(data, { sortBy: field, reversed, search }));
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    setSearch(value);
+    setSortedData(
+      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
+    );
+  };
+ 
+  const loadItem = async () => { // get item's information
+    setLoadingItem(true)
+    const item = await allDataNames.filter((item) => {return item.name === itemName[1]})
+
+    const itemId = item[0].id;
+    await axios.get(`http://localhost:3333/warehouseItems/${itemId}`)
+      .then(res => {
+        setFoundItem(res.data[0]);
+        setLoadingItem(false)
+        setItemLoaded(true)
+      })
+      .catch(error => {
+        console.log("axios error in loadItem function in warehouse page :(((")})
+
+  }
+ 
+  const showIngredients = (food_id: string, food_name: string) => {
+    setLoading(true);
+    axios.get(`http://localhost:3333/ingredients/food/${food_id}`)
+      .then(res =>{
+        console.log("show ingredients: ", res.data)
+          setFoodName(food_name);
+          setIngredients(res.data);
+          setLoading(false);
+          handleOpenModal3();
+        
+      })
+      .catch(error => {
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Failed to show ingredients!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
+  } 
+  const editFood = (food_id: string, food_name: string, food_price: number) => {
+    setLoading(true);
+    axios.get(`http://localhost:3333/ingredients/food/${food_id}`)
+      .then(res =>{
+        console.log("edit food: ", res.data)
+          setFoodId(food_id)
+          setFoodName(food_name);
+          setPrice(food_price);
+          setIngredients(res.data);
+          setModalType("edit");
+          setLoading(false);
+          handleOpenModal();
+        
+          console.log("foodId in editFood", foodId)
+      })
+      .catch(error => {
+        setLoading(false);
+        notifications.show({
+          withBorder: true,
+          title: 'Failed to open "edit food" modal!',
+          message: JSON.stringify(error.response?.data), 
+          color: 'red',
+          position: 'bottom-left',
+          style: {borderColor: 'red', width: '30rem' },
+        });
+      })
+  }
+  const deleteFood = (food_id: string, food_name: string) => { 
+    setFoodId(food_id);
+    setFoodName(food_name);
+    handleOpenModal4()
+  }
+
   const handleAddFood = async () => {
     const newFood = {
       name: foodName,
@@ -426,6 +510,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
       })
       handleCloseModal4();
   }
+  
   const handleAddIngridient = async  () => {
     setLoading(true)
     console.log("ingredients 1", ingredients)
@@ -445,7 +530,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
     axios.delete(`http://localhost:3333/ingredients/${foodId}/${item_id}`)
       .then(res =>{
         setIngredients(ingredients.filter((item) => item.item_id !== item_id));
-        setNewIngredients(newIngredients.filter((item) => item.item_id !== item_id));
+        setNewIngredients(ingredients.filter((item) => item.item_id !== item_id));
         setLoading(false);
       })
       .catch(error => {
@@ -460,89 +545,6 @@ export function FoodsComponent(props: FoodsComponentProps) {
         });
       })
   }
-  const loadItem = async () => { // get item's information
-    setLoadingItem(true)
-    const item = await allDataNames.filter((item) => {return item.name === itemName[1]})
-
-    const itemId = item[0].id;
-    await axios.get(`http://localhost:3333/warehouseItems/${itemId}`)
-      .then(res => {
-        setFoundItem(res.data[0]);
-        setLoadingItem(false)
-        setItemLoaded(true)
-      })
-      .catch(error => {
-        console.log("axios error in loadItem function in warehouse page :(((")})
-
-  }
-
-  const setSorting = (field: keyof RowData) => {
-    const reversed = field === sortBy ? !reverseSortDirection : false;
-    setReverseSortDirection(reversed);
-    setSortBy(field);
-    setSortedData(sortData(data, { sortBy: field, reversed, search }));
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    setSearch(value);
-    setSortedData(
-      sortData(data, { sortBy, reversed: reverseSortDirection, search: value })
-    );
-  };
- 
-  const showIngredients = (food_id: string, food_name: string) => {
-    setLoading(true);
-    axios.get(`http://localhost:3333/ingredients/food/${food_id}`)
-      .then(res =>{
-        console.log("show ingredients: ", res.data)
-          setFoodName(food_name);
-          setIngredients(res.data);
-          setLoading(false);
-          handleOpenModal3();
-        
-      })
-      .catch(error => {
-        setLoading(false);
-        notifications.show({
-          withBorder: true,
-          title: 'Failed to show ingredients!',
-          message: JSON.stringify(error.response?.data), 
-          color: 'red',
-          position: 'bottom-left',
-          style: {borderColor: 'red', width: '30rem' },
-        });
-      })
-  } 
-  const editFood = (food_id: string, food_name: string, food_price: number) => {
-    setLoading(true);
-    axios.get(`http://localhost:3333/ingredients/food/${food_id}`)
-      .then(res =>{
-        console.log("edit food: ", res.data)
-          setFoodId(food_id)
-          setFoodName(food_name);
-          setPrice(food_price);
-          setIngredients(res.data);
-          setModalType("edit");
-          setLoading(false);
-          handleOpenModal();
-        
-          console.log("foodId in editFood", foodId)
-      })
-      .catch(error => {
-        setLoading(false);
-        notifications.show({
-          withBorder: true,
-          title: 'Failed to open "edit food" modal!',
-          message: JSON.stringify(error.response?.data), 
-          color: 'red',
-          position: 'bottom-left',
-          style: {borderColor: 'red', width: '30rem' },
-        });
-      })
-  }
-
-  
   const rows = sortedData.map((row) => (
     <Table.Tr key={row.name}>
       <Table.Td>{row.name}</Table.Td>
@@ -559,7 +561,7 @@ export function FoodsComponent(props: FoodsComponentProps) {
             <IconPencil size={12} stroke={1.5} />
           </ActionIcon>
         </Tooltip>
-        <Tooltip label="Delete Food" position="top" onClick={() => handleOpenModal4(row.id, row.name)}>
+        <Tooltip label="Delete Food" position="top" onClick={() => deleteFood(row.id, row.name)}>
           <ActionIcon variant="outline" color='gray' size='sm'>
             <IconEraser size={12} stroke={1.5} />
           </ActionIcon>
@@ -663,7 +665,6 @@ export function FoodsComponent(props: FoodsComponentProps) {
                 
             ))}
             </>
-            {/* <IngredientsDetails ingredients={ingredients} /> */}
 
             <Modal opened={isModalOpen2} onClose={handleCloseModal2} title="Add an ingridient">
             <Box style={{ display: 'flex', flexDirection: 'column' }}> 
