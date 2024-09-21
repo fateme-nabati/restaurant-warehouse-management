@@ -6,10 +6,6 @@ import {
   IconBellRinging,
   IconPackage,
   IconMeat,
-  // IconFingerprint,
-  // IconSettings,
-  // IconDatabaseImport,
-  // IconReceipt2,
   IconSwitchHorizontal,
   IconLogout,
   IconDashboard,
@@ -35,33 +31,7 @@ const data = [
 export function NavbarComponent(props: NavbarComponentProps) {
   const [active, setActive] = useState(props.activeLabel);
   // const navigate = useNavigate();
-  const links = data.map((item) => (
-    // <Link className={classes.link}
-    //   data-active={item.label === active || undefined}
-    //   to={item.link}
-    //   key={item.label}
-    //   onClick={(event) => {
-    //     // navigate("/warehouse")
-    //     event.preventDefault();
-    //     setActive(item.label);
-    //   }}>
-    //  {item.label}
-    // </Link>
-    // <a>
-    //   className={classes.link}
-    //   data-active={item.label === active || undefined}
-    //   href={item.link}
-    //   key={item.label}
-    // onClick={(event) => {
-      //   event.preventDefault();
-    //   // navigate("/warehouse")
-    //   setActive(item.label);
-    // }}>
-
-    // <item.icon className={classes.linkIcon} stroke={1.5} />
-    // <span>{item.label}</span>
-    // </a>
-
+  const links = data.map((item) => (   
     <NavLink
       component={Link}
       variant='link'
@@ -80,7 +50,7 @@ export function NavbarComponent(props: NavbarComponentProps) {
   )
   );
 
-  // export const returnSetActive = () => {return setActive}
+  
   return (
     <AppShell.Navbar className={classes.navbar} p="md">
       <div className={classes.navbarMain}>

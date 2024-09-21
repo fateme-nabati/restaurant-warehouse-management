@@ -1,12 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ScrollArea,
   Group,
   Text,
   TextInput,
-  rem,
-  // keys,
-  // keys,
+  rem, 
   Button,
   Modal,
   Box,
@@ -15,15 +13,15 @@ import {
   Card,
   SimpleGrid,
   Anchor,
+  Loader
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates'
-import { 
-  // IconSelector, 
-  // IconChevronDown, 
-  // IconChevronUp, 
-  // IconSearch, 
-  IconPlus } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
 import { Link } from 'react-router-dom'
+import axios from "axios"
+import { notifications } from '@mantine/notifications';
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import classes from './RestaurantComponent.module.css';
 
 /* eslint-disable-next-line */
@@ -31,73 +29,92 @@ export interface RestaurantComponentProps {}
 
 interface RowData {
   date: string;
-  foods: Array<string>;
+  foods: string[]
+}
+
+interface Prepare {
+  restaurant_id: string; 
+  food_id: string; 
+  date: string; 
+  meal: string; 
+  reserved_no: number; 
+  bought_daily_no: number; 
+  cooked_no: number; 
+  delivered_no: number;
+}
+
+interface Restaurant {
+  id: string;
+  name: string;
 }
 
 
-const data : RowData[] = [
-  {
-    date: 'saturday, June 1, 2024',
-    foods: ['Gheyme', 'Kabab'],
-  },
-  {
-    date: 'sunday, June 2, 2024',
-    foods: ['Ghorme sabzi', 'Cholo goosht'],
-  },
-  {
-    date: 'monday, June 3, 2024',
-    foods: ['Morgh', 'Khoresht khalal'], 
-  },
-  {
-    date: 'tuesday, June 4, 2024',
-    foods: ['Mahi', 'Falafel'], 
-  },
-  {
-    date: 'wednsday, June 5, 2024',
-    foods: ['Khoresht bademjoon', 'Makarooni'], 
-  },
-  {
-    date: 'thursday, June 6, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'friday, June 7, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'saturday, June 8, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'sunday, June 9, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'monday, June 10, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'saturday, June 1, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'saturday, June 1, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'saturday, June 1, 2024',
-    foods: ['10000', '7000'],
-  },
-  {
-    date: 'saturday, June 1, 2024',
-    foods: ['10000', '7000'],
-  },
+// const data : RowData[] = [
+//   {
+//     date: 'saturday, June 1, 2024',
+//     foods: ['Gheyme', 'Kabab'],
+//   },
+//   {
+//     date: 'sunday, June 2, 2024',
+//     foods: ['Ghorme sabzi', 'Cholo goosht'],
+//   },
+//   {
+//     date: 'monday, June 3, 2024',
+//     foods: ['Morgh', 'Khoresht khalal'], 
+//   },
+//   {
+//     date: 'tuesday, June 4, 2024',
+//     foods: ['Mahi', 'Falafel'], 
+//   },
+//   {
+//     date: 'wednsday, June 5, 2024',
+//     foods: ['Khoresht bademjoon', 'Makarooni'], 
+//   },
+//   {
+//     date: 'thursday, June 6, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'friday, June 7, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'saturday, June 8, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'sunday, June 9, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'monday, June 10, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'saturday, June 1, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'saturday, June 1, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'saturday, June 1, 2024',
+//     foods: ['10000', '7000'],
+//   },
+//   {
+//     date: 'saturday, June 1, 2024',
+//     foods: ['10000', '7000'],
+//   },
  
-];
+// ];
 
 export function RestaurantComponent(props: RestaurantComponentProps) {
 
-  // const [opened, { open, close }] = useDisclosure(false);
+  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant"});
+  const [data, setData] = useState<RowData[]> ([])
+  const [dateInfo, setDateInfo] = useState<Prepare[]>([{restaurant_id: "", food_id: "", date: "1970-01-01", meal: "", reserved_no: 0, bought_daily_no: 0, cooked_no: 0, delivered_no: 0}]); // all items in specific warehouse
+  const [loading, setLoading] = useState <boolean> (true);
   const [restaurantName, setRestaurantName] = useState <string | null>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [date, setDate] = useState <Date | null>(null);
@@ -107,6 +124,31 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
   const [cookedNo, setCookedNo] = useState(0);
   const [deliveredNo, setDeliveredNo] = useState(0);
 
+  const getData = async () => { // get foods that are in specific restaurant
+    setLoading(true);
+    await axios.get(`http://localhost:3333/prepare/restaurant/${restaurant.id}/date`)
+        .then(res => {
+        
+          setData(res.data);
+          setLoading(false);
+        })
+        
+        .catch(error => {
+          console.log("axios error in getData function in restaurant page :(((")})
+  }
+
+  // const getAllDataNames = async () => { // get all items names that are in defined in the system 
+  //   setLoading(true);
+  //   await axios.get('http://localhost:3333/warehouseItems/names')
+  //       .then(res => {
+        
+  //         setAllDataNames(res.data); 
+  //         setLoading(false);
+  //       })
+        
+  //       .catch(error => {
+  //         console.log("axios error in getAllDataNames function in warehouse page :(((")})
+  // }
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
@@ -130,10 +172,15 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
       </Anchor>
       
       <Text fz="sm" c="dimmed" mt="sm">
-        {day.foods.join()}
+        {day.foods.join(', ')}
       </Text>
     </Card>
   ));
+  useEffect(() => {getData()}, []);
+ if(loading){
+    console.log("loading")
+    return <Loader type="dots" color="grape" />;
+  }
   return (
     <ScrollArea>
      

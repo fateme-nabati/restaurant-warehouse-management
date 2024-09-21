@@ -8,6 +8,7 @@ export const getPrepareByRestaurantIdAndFoodId = (req, res) => {
       if (error) {
         throw error
       }
+      results.rows.map((row) => row.date = row.date.toISOString().split('T')[0])
       res.status(200).json(results.rows)
     })
   }
