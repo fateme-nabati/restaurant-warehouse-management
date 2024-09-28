@@ -29,7 +29,10 @@ export interface RestaurantComponentProps {}
 
 interface RowData {
   date: string;
-  foods: string[]
+  foods: {
+    id: string;
+    name: string;
+  }[]
 }
 
 interface Prepare {
@@ -48,66 +51,6 @@ interface Restaurant {
   name: string;
 }
 
-
-// const data : RowData[] = [
-//   {
-//     date: 'saturday, June 1, 2024',
-//     foods: ['Gheyme', 'Kabab'],
-//   },
-//   {
-//     date: 'sunday, June 2, 2024',
-//     foods: ['Ghorme sabzi', 'Cholo goosht'],
-//   },
-//   {
-//     date: 'monday, June 3, 2024',
-//     foods: ['Morgh', 'Khoresht khalal'], 
-//   },
-//   {
-//     date: 'tuesday, June 4, 2024',
-//     foods: ['Mahi', 'Falafel'], 
-//   },
-//   {
-//     date: 'wednsday, June 5, 2024',
-//     foods: ['Khoresht bademjoon', 'Makarooni'], 
-//   },
-//   {
-//     date: 'thursday, June 6, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'friday, June 7, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'saturday, June 8, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'sunday, June 9, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'monday, June 10, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'saturday, June 1, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'saturday, June 1, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'saturday, June 1, 2024',
-//     foods: ['10000', '7000'],
-//   },
-//   {
-//     date: 'saturday, June 1, 2024',
-//     foods: ['10000', '7000'],
-//   },
- 
-// ];
 
 export function RestaurantComponent(props: RestaurantComponentProps) {
 
@@ -167,12 +110,14 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
   // const theme = useMantineTheme();
   const days = data.map((day) => (
     <Card key={day.date} shadow="md" radius="md" className={classes.card} padding="xl">
-      <Anchor component={Link} variant="link" to='/dateInfo' fz="lg" fw={500} className={classes.cardDate}mt="md" ta="left" c="pink">
+      <Anchor component={Link} variant="link" to={`/dateInfo?date=${encodeURIComponent(day.date)}`} fz="lg" fw={500} className={classes.cardDate}mt="md" ta="left" c="pink">
             {day.date}
       </Anchor>
       
       <Text fz="sm" c="dimmed" mt="sm">
-        {day.foods.join(', ')}
+        {
+        day.foods.map((food) => food.name).join(', ')
+        }
       </Text>
     </Card>
   ));

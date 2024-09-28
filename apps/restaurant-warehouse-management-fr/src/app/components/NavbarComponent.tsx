@@ -52,12 +52,12 @@ export function NavbarComponent(props: NavbarComponentProps) {
 
   
   return (
-    <AppShell.Navbar className={classes.navbar} p="md">
-      <div className={classes.navbarMain}>
-        <Group className={classes.header} justify="space-between">
+    <AppShell.Navbar className={classes.navbar} p="md" >
+      <div className={classes.navbarMain} style={{ paddingTop: '50px' }}>
+        {/* <Group className={classes.header} justify="space-between">
           <MantineLogo size={28} />
           <Code fw={700}>v3.1.2</Code>
-        </Group>
+        </Group> */}
         {links}
       </div>
 

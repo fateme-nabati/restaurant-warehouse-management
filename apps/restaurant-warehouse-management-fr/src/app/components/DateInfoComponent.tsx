@@ -8,6 +8,8 @@ import {
   IconArrowDownRight,
 } from '@tabler/icons-react';
 import classes from './DateInfoComponent.module.css';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 /* eslint-disable-next-line */
 export interface DateInfoComponentProps {}
@@ -30,6 +32,8 @@ const data = [
 ] as const;
 
 export function DateInfoComponent(props: DateInfoComponentProps) {
+  const location = useLocation();
+  const { date } = queryString.parse(location.search);
   const stats = data.map((stat) => {
     const Icon = icons[stat.icon];
     const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
