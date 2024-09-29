@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Group, Paper, SimpleGrid, Text } from '@mantine/core';
 import {
   IconUserPlus,
@@ -10,9 +11,26 @@ import {
 import classes from './DateInfoComponent.module.css';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
+import axios from "axios"
 
 /* eslint-disable-next-line */
 export interface DateInfoComponentProps {}
+
+interface Restaurant {
+  id: string;
+  name: string;
+}
+
+interface RowData {
+  restaurant_id: string; 
+  food_id: string; 
+  date: string; 
+  meal: string; 
+  reserved_no: number; 
+  bought_daily_no: number; 
+  cooked_no: number; 
+  delivered_no: number;
+}
 
 const icons = {
   user: IconUserPlus,
@@ -32,9 +50,37 @@ const data = [
 ] as const;
 
 export function DateInfoComponent(props: DateInfoComponentProps) {
+  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant"});
+  const [data, setData] = useState<RowData[]> ([])
   const location = useLocation();
   const { date } = queryString.parse(location.search);
-  const stats = data.map((stat) => {
+  const getFoods = async (date: string) => { 
+    // setLoading(true);
+    await axios.get(`http://localhost:3333/prepare/restaurant/${restaurant.id}/${food_id}`)
+        .then(res => {
+        
+          setData(res.data);
+          // setLoading(false);
+        })
+        
+        .catch(error => {
+          console.log("axios error in getData function in restaurant page :(((")})
+  }
+  const getData = async (food_id: string) => { 
+    // setLoading(true);
+    await axios.get(`http://localhost:3333/prepare/${restaurant.id}/${food_id}`)
+        .then(res => {
+        
+          setData(res.data);
+          // setLoading(false);
+        })
+        
+        .catch(error => {
+          console.log("axios error in getData function in restaurant page :(((")})
+  }
+
+  foods_ids.map()
+  stats[index] = data.map((stat) => {
     const Icon = icons[stat.icon];
     const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
 
@@ -61,9 +107,14 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
       </Paper>
     );
   });
-  return (
+  return ( 
+  <>
+    {foods_ids.map((food, index) => (
     <div className={classes.root}>
-      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
+      <Text>{date} :</Text>
+      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats[index]}</SimpleGrid>
     </div>
+    ))}
+  </>
   );
 }

@@ -19,7 +19,7 @@ import { DateInput } from '@mantine/dates'
 import { IconPlus } from '@tabler/icons-react';
 import { Link } from 'react-router-dom'
 import axios from "axios"
-import { notifications } from '@mantine/notifications';
+// import { notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import classes from './RestaurantComponent.module.css';
@@ -32,6 +32,11 @@ interface RowData {
   foods: {
     id: string;
     name: string;
+    meal: string;
+    reserved_no: number;
+    bought_daily_no: number;
+    cooked_no: number;
+    delivered_no: number;
   }[]
 }
 

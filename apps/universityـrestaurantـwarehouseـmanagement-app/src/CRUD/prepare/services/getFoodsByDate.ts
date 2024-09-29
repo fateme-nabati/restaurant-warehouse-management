@@ -19,3 +19,6 @@ export const getFoodsByDate = (req, res) => {
   }
 
 module.exports = {getFoodsByDate}
+
+
+// 'meal', p.meal, 'reserved_no', p.reserved_no, 'bought_daily_no', p.bought_daily_no, 'cooked_no', p.cooked_no, 'delivered_no', p.delivered_no 
