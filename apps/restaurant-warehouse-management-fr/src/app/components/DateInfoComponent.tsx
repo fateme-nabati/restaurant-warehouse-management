@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Group, Paper, SimpleGrid, Text } from '@mantine/core';
 import {
   IconUserPlus,
@@ -23,7 +23,9 @@ interface Restaurant {
 
 interface RowData {
   restaurant_id: string; 
+  restaurant_name: string; 
   food_id: string; 
+  food_name: string; 
   date: string; 
   meal: string; 
   reserved_no: number; 
@@ -52,35 +54,42 @@ const data = [
 export function DateInfoComponent(props: DateInfoComponentProps) {
   const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant"});
   const [data, setData] = useState<RowData[]> ([])
+  const [loading, setLoading] = useState <boolean> (true);
   const location = useLocation();
   const { date } = queryString.parse(location.search);
-  const getFoods = async (date: string) => { 
-    // setLoading(true);
-    await axios.get(`http://localhost:3333/prepare/restaurant/${restaurant.id}/${food_id}`)
+  const dateString = Array.isArray(date) ? date[0] : date; 
+  const getPrepares = async (date: string) => { 
+    setLoading(true);
+    await axios.get(`http://localhost:3333/prepare/restaurant/${restaurant.id}/date/${date}`)
         .then(res => {
         
           setData(res.data);
-          // setLoading(false);
+          setLoading(false);
         })
         
         .catch(error => {
           console.log("axios error in getData function in restaurant page :(((")})
   }
-  const getData = async (food_id: string) => { 
-    // setLoading(true);
-    await axios.get(`http://localhost:3333/prepare/${restaurant.id}/${food_id}`)
-        .then(res => {
+  // const getData = async (food_id: string) => { 
+  //   // setLoading(true);
+  //   await axios.get(`http://localhost:3333/prepare/${restaurant.id}/${food_id}`)
+  //       .then(res => {
         
-          setData(res.data);
-          // setLoading(false);
-        })
+  //         setData(res.data);
+  //         // setLoading(false);
+  //       })
         
-        .catch(error => {
-          console.log("axios error in getData function in restaurant page :(((")})
-  }
+  //       .catch(error => {
+  //         console.log("axios error in getData function in restaurant page :(((")})
+  // }
 
-  foods_ids.map()
-  stats[index] = data.map((stat) => {
+  useEffect(() => {
+    if (dateString) {
+      getPrepares(dateString);
+    }
+  }, [dateString]);
+
+  const stats = data.map((stat) => {
     const Icon = icons[stat.icon];
     const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
 
@@ -108,13 +117,11 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
     );
   });
   return ( 
-  <>
-    {foods_ids.map((food, index) => (
+   
     <div className={classes.root}>
       <Text>{date} :</Text>
-      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats[index]}</SimpleGrid>
+      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
     </div>
-    ))}
-  </>
+   
   );
 }

@@ -32,11 +32,7 @@ interface RowData {
   foods: {
     id: string;
     name: string;
-    meal: string;
-    reserved_no: number;
-    bought_daily_no: number;
-    cooked_no: number;
-    delivered_no: number;
+   
   }[]
 }
 
