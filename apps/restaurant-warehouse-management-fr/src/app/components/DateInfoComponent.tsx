@@ -41,15 +41,25 @@ const icons = {
   coin: IconCoin,
 };
 
-const data = [
-  { title: 'Number of cooked', icon: 'receipt', value: '13,456', diff: 34 },
-  { title: 'Number of reserved', icon: 'coin', value: '4,145', diff: -13 },
-  { title: 'Number of daily bought', icon: 'discount', value: '745', diff: 18 },
-  { title: 'Number of delivered', icon: 'user', value: '188', diff: -30 },
-  { title: 'Number of sookhte', icon: 'user', value: '188', diff: -30 },
-  { title: 'Number of staff food', icon: 'user', value: '188', diff: -30 },
-  { title: 'Number of wasted', icon: 'user', value: '188', diff: -30 },
-] as const;
+// const properties = [
+//   { title: 'Number of cooked', icon: 'receipt', value: '13,456', diff: 34 },
+//   { title: 'Number of reserved', icon: 'coin', value: '4,145', diff: -13 },
+//   { title: 'Number of daily bought', icon: 'discount', value: '745', diff: 18 },
+//   { title: 'Number of delivered', icon: 'user', value: '188', diff: -30 },
+//   { title: 'Number of sookhte', icon: 'user', value: '188', diff: -30 },
+//   { title: 'Number of staff food', icon: 'user', value: '188', diff: -30 },
+//   { title: 'Number of wasted', icon: 'user', value: '188', diff: -30 },
+// ] as const;
+
+const properties = [
+  { title: 'Number of cooked', icon: 'receipt', value: '' },
+  { title: 'Number of reserved', icon: 'coin', value: '' },
+  { title: 'Number of daily bought', icon: 'discount', value: '' },
+  { title: 'Number of delivered', icon: 'user', value: '' },
+  { title: 'Number of sookhte', icon: 'user', value: '' },
+  { title: 'Number of staff food', icon: 'user', value: '' },
+  { title: 'Number of wasted', icon: 'user', value: '' },
+];
 
 export function DateInfoComponent(props: DateInfoComponentProps) {
   const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant"});
@@ -64,6 +74,7 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
         .then(res => {
         
           setData(res.data);
+          properties.map((property, index) => property.title = res.data[index])
           setLoading(false);
         })
         
@@ -89,9 +100,10 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
     }
   }, [dateString]);
 
-  const stats = data.map((stat) => {
-    const Icon = icons[stat.icon];
-    const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
+  const stats = properties.map((stat) => {
+    // const Icon = icons[stat.icon];
+    const Icon = icons["coin"];
+    // const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
 
     return (
       <Paper withBorder p="md" radius="md" key={stat.title}>
@@ -104,15 +116,15 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
 
         <Group align="flex-end" gap="xs" mt={25}>
           <Text className={classes.value}>{stat.value}</Text>
-          <Text c={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={classes.diff}>
+          {/* <Text c={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={classes.diff}>
             <span>{stat.diff}%</span>
             <DiffIcon size="1rem" stroke={1.5} />
-          </Text>
+          </Text> */}
         </Group>
-
+{/* 
         <Text fz="xs" c="dimmed" mt={7}>
           Compared to previous month
-        </Text>
+        </Text> */}
       </Paper>
     );
   });
