@@ -19,7 +19,7 @@ import { DateInput } from '@mantine/dates'
 import { IconPlus } from '@tabler/icons-react';
 import { Link } from 'react-router-dom'
 import axios from "axios"
-// import { notifications } from '@mantine/notifications';
+import { notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import classes from './RestaurantComponent.module.css';
@@ -57,7 +57,7 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
 
   const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant"});
   const [data, setData] = useState<RowData[]> ([])
-  const [dateInfo, setDateInfo] = useState<Prepare[]>([{restaurant_id: "", food_id: "", date: "1970-01-01", meal: "", reserved_no: 0, bought_daily_no: 0, cooked_no: 0, delivered_no: 0}]); // all items in specific warehouse
+  const [dateInfo, setDateInfo] = useState<Prepare[]>([{restaurant_id: "", food_id: "", date: "1970-01-01", meal: "", reserved_no: 0, bought_daily_no: 0, cooked_no: 0, delivered_no: 0}]); 
   const [loading, setLoading] = useState <boolean> (true);
   const [restaurantName, setRestaurantName] = useState <string | null>('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,7 +78,16 @@ export function RestaurantComponent(props: RestaurantComponentProps) {
         })
         
         .catch(error => {
-          console.log("axios error in getData function in restaurant page :(((")})
+          // console.log("axios error in getData function in restaurant page :(((")})
+            notifications.show({
+                withBorder: true,
+                title: 'Failed to recieve response from server in restaurant page!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+        })
   }
 
   // const getAllDataNames = async () => { // get all items names that are in defined in the system 

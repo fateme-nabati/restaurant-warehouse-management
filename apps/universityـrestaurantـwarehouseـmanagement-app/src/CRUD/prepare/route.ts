@@ -15,9 +15,9 @@ router.get('/', getAllPrepares);
 router.get('/restaurant/:restaurant_id', getPrepareByRestaurantId)
 router.get('/food/:food_id', getPrepareByFoodId)
 router.get('/restaurant/:restaurant_id/food/:food_id', getPrepareByRestaurantIdAndFoodId);
+router.get('/restaurant/:restaurant_id/date', getFoodsByDate)
 router.get('/restaurant/:restaurant_id/date/:date', getPrepareByRestaurantIdAndDate);
 router.get('/:restaurant_id/:food_id/:date', getPrepareByRestaurantIdAndFoodIdAndDate);
-router.get('/restaurant/:restaurant_id/date', getFoodsByDate)
 router.post('/', createPrepare);
 router.put('/:restaurant_id/:food_id', updatePrepare);
 router.delete('/:restaurant_id/:food_id', deletePrepare);

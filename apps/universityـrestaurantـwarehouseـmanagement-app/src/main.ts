@@ -54,6 +54,5 @@ const server = app.listen(port, () => {
 });
 server.on('error', console.error);
 
-// NEW TOKEN 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
 
 
