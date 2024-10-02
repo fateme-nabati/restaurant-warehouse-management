@@ -56,19 +56,20 @@ const icons = {
 //   { title: 'Number of wasted', icon: 'user', value: '188', diff: -30 },
 // ] as const;
 
-const properties = [
-  { title: 'Number of cooked', icon: 'receipt', value: '' },
+  
+export function DateInfoComponent(props: DateInfoComponentProps) {
+  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant", number_of_staff: 20});
+  const [data, setData] = useState<RowData[]> ([])
+  const [loading, setLoading] = useState <boolean> (true);
+  const [properties, setProperties] = useState([
+  {  title: 'Number of cooked', icon: 'receipt', value: '' },
   { title: 'Number of reserved', icon: 'coin', value: '' },
   { title: 'Number of daily bought', icon: 'discount', value: '' },
   { title: 'Number of delivered', icon: 'user', value: '' },
   { title: 'Number of sookhte', icon: 'user', value: '' },
   { title: 'Number of wasted', icon: 'user', value: '' },
-];
+])
 
-export function DateInfoComponent(props: DateInfoComponentProps) {
-  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant", number_of_staff: 20});
-  const [data, setData] = useState<RowData[]> ([])
-  const [loading, setLoading] = useState <boolean> (true);
   const location = useLocation();
   const { date } = queryString.parse(location.search);
   const dateString = Array.isArray(date) ? date[0] : date; 
@@ -82,7 +83,6 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
         })
         
         .catch(error => {
-          // console.log("axios error in getData function in restaurant page :(((")
             notifications.show({
                 withBorder: true,
                 title: 'Failed to recieve response from server in date info page!',
@@ -93,38 +93,30 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
               });
         })
   }
-  // const getData = async (food_id: string) => { 
-  //   // setLoading(true);
-  //   await axios.get(`http://localhost:3333/prepare/${restaurant.id}/${food_id}`)
-  //       .then(res => {
-        
-  //         setData(res.data);
-  //         // setLoading(false);
-  //       })
-        
-  //       .catch(error => {
-  //         console.log("axios error in getData function in restaurant page :(((")})
-  // }
-
+  
   useEffect(() => {
     if (dateString) {
       getPrepares(dateString);
     }
   }, [dateString]);
 
+  
   useEffect(() => {
     if (!loading && data.length > 0) {
-      // properties.map((property, index) => property.value = data[0].)
-      properties[0].value = String(data[0].cooked_no);
-      properties[1].value = String(data[0].reserved_no);
-      properties[2].value = String(data[0].bought_daily_no);
-      properties[3].value = String(data[0].delivered_no);
-      properties[4].value = String(data[0].reserved_no + data[0].bought_daily_no - data[0].delivered_no); // sookhte food
-      properties[5].value = String(data[0].cooked_no - data[0].delivered_no); // wasted food
-    // properties bayad ye array beshe va be ezaye har food, yeki as index hash por beshe (inja bayad halghe bezarim)
+      const newProperties = [...properties]; 
+      console.log("properties before assignment: ", properties)
+      console.log("date before assignment: ", data)
+      newProperties[0].value = String(data[0].cooked_no);
+      newProperties[1].value = String(data[0].reserved_no);
+      newProperties[2].value = String(data[0].bought_daily_no);
+      newProperties[3].value = String(data[0].delivered_no);
+      newProperties[4].value = String(data[0].reserved_no + data[0].bought_daily_no - data[0].delivered_no); // sookhte food
+      newProperties[5].value = String(data[0].cooked_no - data[0].delivered_no); // wasted food
+      console.log("properties after assignment: ", properties)
+      // properties bayad ye array beshe va be ezaye har food, yeki as index hash por beshe (inja bayad halghe bezarim)
+      setProperties(newProperties);
     }
   }, [loading, data])
-  
       const stats = properties.map((stat) => {
         // const Icon = icons[stat.icon];
         const Icon = icons["coin"];
@@ -161,7 +153,7 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
   }
   return ( 
     <div className={classes.root}>
-      <Text>{date} :</Text>
+      <Text size="xs" c="dimmed" className={classes.title}>{date}</Text>    
       <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
     </div>
    

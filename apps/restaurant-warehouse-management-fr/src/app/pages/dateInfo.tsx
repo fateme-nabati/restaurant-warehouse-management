@@ -20,8 +20,8 @@ export function DateInfo(props: DateInfoProps) {
       <HeaderComponent />
       <NavbarComponent activeLabel='Restaurant'/>
       <AppShell.Main>
-       <Text ml={50}>Saturday June, 1, 2024</Text>
-       <Text ml={50}>Ghorme  sabzi :</Text>
+       {/* <Text ml={50}>Saturday June, 1, 2024</Text>
+       <Text ml={50}>Ghorme  sabzi :</Text> */}
         <DateInfoComponent />
       </AppShell.Main>
     </AppShell>
