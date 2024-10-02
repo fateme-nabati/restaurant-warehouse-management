@@ -13,7 +13,11 @@ export const getPrepareByRestaurantIdAndFoodIdAndDate = (req, res) => {
         throw error
       }
       console.log(results.rows);
-      results.rows.map((row) => row.date = row.date.toISOString().split('T')[0])
+      results.rows.map((row) => {
+        const originalDate = new Date(row.date);
+        originalDate.setDate(originalDate.getDate() + 1);
+        row.date = originalDate.toISOString().split('T')[0]
+      })
      
       
       res.status(200).json(results.rows)

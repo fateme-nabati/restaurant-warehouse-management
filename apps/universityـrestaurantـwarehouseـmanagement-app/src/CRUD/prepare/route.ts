@@ -19,7 +19,7 @@ router.get('/restaurant/:restaurant_id/date', getFoodsByDate)
 router.get('/restaurant/:restaurant_id/date/:date', getPrepareByRestaurantIdAndDate);
 router.get('/:restaurant_id/:food_id/:date', getPrepareByRestaurantIdAndFoodIdAndDate);
 router.post('/', createPrepare);
-router.put('/:restaurant_id/:food_id', updatePrepare);
+router.put('/:restaurant_id/:food_id/:date', updatePrepare);
 router.delete('/:restaurant_id/:food_id', deletePrepare);
 
 module.exports = router;

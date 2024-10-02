@@ -62,7 +62,6 @@ const properties = [
   { title: 'Number of daily bought', icon: 'discount', value: '' },
   { title: 'Number of delivered', icon: 'user', value: '' },
   { title: 'Number of sookhte', icon: 'user', value: '' },
-  { title: 'Number of staff food', icon: 'user', value: '' },
   { title: 'Number of wasted', icon: 'user', value: '' },
 ];
 
@@ -121,8 +120,7 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
       properties[2].value = String(data[0].bought_daily_no);
       properties[3].value = String(data[0].delivered_no);
       properties[4].value = String(data[0].reserved_no + data[0].bought_daily_no - data[0].delivered_no); // sookhte food
-      properties[5].value = String(data[0].delivered_no); // staff food
-      properties[6].value = String(data[0].cooked_no - data[0].delivered_no - restaurant.number_of_staff); // wasted food
+      properties[5].value = String(data[0].cooked_no - data[0].delivered_no); // wasted food
     // properties bayad ye array beshe va be ezaye har food, yeki as index hash por beshe (inja bayad halghe bezarim)
     }
   }, [loading, data])
