@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Group, Paper, SimpleGrid, Text, Loader } from '@mantine/core';
+import { Group, Paper, SimpleGrid, Text, Loader, Space } from '@mantine/core';
 import {
   IconUserPlus,
   IconDiscount2,
@@ -15,6 +15,7 @@ import axios from "axios"
 import { notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import { title } from 'process';
 
 
 /* eslint-disable-next-line */
@@ -38,6 +39,11 @@ interface RowData {
   cooked_no: number; 
   delivered_no: number;
 }
+interface Property {
+  title: string;
+  icon: string;
+  value: string;
+}
 
 const icons = {
   user: IconUserPlus,
@@ -56,19 +62,21 @@ const icons = {
 //   { title: 'Number of wasted', icon: 'user', value: '188', diff: -30 },
 // ] as const;
 
-  
-export function DateInfoComponent(props: DateInfoComponentProps) {
-  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant", number_of_staff: 20});
-  const [data, setData] = useState<RowData[]> ([])
-  const [loading, setLoading] = useState <boolean> (true);
-  const [properties, setProperties] = useState([
-  {  title: 'Number of cooked', icon: 'receipt', value: '' },
+const initialProperties = [[
+  { title: 'Number of cooked', icon: 'receipt', value: '' },
   { title: 'Number of reserved', icon: 'coin', value: '' },
   { title: 'Number of daily bought', icon: 'discount', value: '' },
   { title: 'Number of delivered', icon: 'user', value: '' },
   { title: 'Number of sookhte', icon: 'user', value: '' },
   { title: 'Number of wasted', icon: 'user', value: '' },
-])
+]];
+
+  
+export function DateInfoComponent(props: DateInfoComponentProps) {
+  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant", number_of_staff: 20});
+  const [data, setData] = useState<RowData[]> ([])
+  const [loading, setLoading] = useState <boolean> (true);
+  const [properties, setProperties] = useState<Property[][]>(initialProperties)
 
   const location = useLocation();
   const { date } = queryString.parse(location.search);
@@ -103,21 +111,38 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
   
   useEffect(() => {
     if (!loading && data.length > 0) {
-      const newProperties = [...properties]; 
-      console.log("properties before assignment: ", properties)
-      console.log("date before assignment: ", data)
-      newProperties[0].value = String(data[0].cooked_no);
-      newProperties[1].value = String(data[0].reserved_no);
-      newProperties[2].value = String(data[0].bought_daily_no);
-      newProperties[3].value = String(data[0].delivered_no);
-      newProperties[4].value = String(data[0].reserved_no + data[0].bought_daily_no - data[0].delivered_no); // sookhte food
-      newProperties[5].value = String(data[0].cooked_no - data[0].delivered_no); // wasted food
-      console.log("properties after assignment: ", properties)
-      // properties bayad ye array beshe va be ezaye har food, yeki as index hash por beshe (inja bayad halghe bezarim)
+      const newProperties = data.map((food) => {
+        return [
+          { title: 'Number of cooked', icon: 'receipt', value: String(food.cooked_no) },
+          { title: 'Number of reserved', icon: 'coin', value: String(food.reserved_no) },
+          { title: 'Number of daily bought', icon: 'discount', value: String(food.bought_daily_no) },
+          { title: 'Number of delivered', icon: 'user', value: String(food.delivered_no) },
+          { title: 'Number of sookhte', icon: 'user', value: String(food.reserved_no + food.bought_daily_no - food.delivered_no) }, // sookhte food
+          { title: 'Number of wasted', icon: 'user', value: String(food.cooked_no - food.delivered_no) }, // wasted food
+        ];
+      });
+      
+      // Now set properties with the new 2D array
       setProperties(newProperties);
     }
+      // data.map((food, index) => (
+      //   const newProperties = [...properties]; 
+      //   console.log("properties before assignment: ", properties)
+      //   console.log("date before assignment: ", data)
+      //   newProperties[index][0].value = String(food.cooked_no);
+      //   newProperties[index][1].value = String(food.reserved_no);
+      //   newProperties[index][2].value = String(food.bought_daily_no);
+      //   newProperties[index][3].value = String(food.delivered_no);
+      //   newProperties[index][4].value = String(food.reserved_no + food.bought_daily_no - food.delivered_no); // sookhte food
+      //   newProperties[index][5].value = String(data[0].cooked_no - data[0].delivered_no); // wasted food
+        // console.log("properties after assignment: ", properties)
+        // properties bayad ye array beshe va be ezaye har food, yeki as index hash por beshe (inja bayad halghe bezarim)
+        // setProperties(newProperties);
+    //   ))
+    // }
   }, [loading, data])
-      const stats = properties.map((stat) => {
+      const stats = properties.map((property) => {
+        return property.map((stat) => {
         // const Icon = icons[stat.icon];
         const Icon = icons["coin"];
         // const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
@@ -133,17 +158,10 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
 
             <Group align="flex-end" gap="xs" mt={25}>
               <Text className={classes.value}>{stat.value}</Text>
-              {/* <Text c={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={classes.diff}>
-                <span>{stat.diff}%</span>
-                <DiffIcon size="1rem" stroke={1.5} />
-              </Text> */}
             </Group>
-    {/* 
-            <Text fz="xs" c="dimmed" mt={7}>
-              Compared to previous month
-            </Text> */}
           </Paper>
         );
+      })
       });
 
 
@@ -153,8 +171,20 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
   }
   return ( 
     <div className={classes.root}>
-      <Text size="xs" c="dimmed" className={classes.title}>{date}</Text>    
-      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
+      <Text size="lg" variant="gradient" gradient={{ from: 'cyan', to: 'green', deg: 90 }} className={classes.title}>Foods information in date {date} :
+      </Text>   
+      <Space h="md"/>
+      
+      {
+        stats.map((stat, index) => (
+          <div key={index}>
+          <Text size="md" c='teal' className={classes.title}>{data[index].food_name} :</Text>     
+          <Space h="md"/>
+          <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stat}</SimpleGrid>
+          <Space h="md"/>
+          </div>
+        ))
+      }
     </div>
    
   );
