@@ -180,7 +180,16 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
           setLoading(false);
         })
         
-        .catch(error => {console.log("axios error in getData function in warehouse page :(((")})
+        .catch(error => { 
+          notifications.show({
+                withBorder: true,
+                title: 'Failed to recieve response from the server in warehouse page!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+          })
   }
 
   const getAllDataNames = async () => { // get all items names that are in defined in the system 
@@ -193,7 +202,15 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
         })
         
         .catch(error => {
-          console.log("axios error in getAllDataNames function in warehouse page :(((")})
+            notifications.show({
+                withBorder: true,
+                title: 'Failed to get items names from the server in warehouse page!',
+                message: JSON.stringify(error.response?.data), 
+                color: 'red',
+                position: 'bottom-left',
+                style: {borderColor: 'red', width: '30rem' },
+              });
+          })
   }
   const handleOpenModal = () => {
     setIsModalOpen(true);

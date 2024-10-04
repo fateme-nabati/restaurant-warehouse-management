@@ -4,7 +4,7 @@ export const getFoodsByDate = (req, res) => {
   const restaurant_id = parseInt(req.params.restaurant_id);
 
   pool.query(
-    `SELECT date, jsonb_agg(jsonb_build_object('id', f.id, 'name', f.name)) AS foods  FROM prepare p JOIN food f ON p.food_id = f.id WHERE p.restaurant_id = $1 GROUP BY date ORDER BY date;`,
+    `SELECT date, meal, jsonb_agg(jsonb_build_object('id', f.id, 'name', f.name)) AS foods  FROM prepare p JOIN food f ON p.food_id = f.id WHERE p.restaurant_id = $1 GROUP BY date, meal ORDER BY date DESC;`,
     [restaurant_id],
     (error, results) => {
       if (error) {
