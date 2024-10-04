@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Group, Paper, SimpleGrid, Text, Loader, Space } from '@mantine/core';
+import { Group, Paper, SimpleGrid, Text, Loader, Space, Flex } from '@mantine/core';
 import {
   IconUserPlus,
   IconDiscount2,
@@ -7,6 +7,10 @@ import {
   IconCoin,
   IconArrowUpRight,
   IconArrowDownRight,
+  IconCooker,
+  IconBowlSpoon,
+  IconMoodSad,
+  IconTrash,
 } from '@tabler/icons-react';
 import classes from './DateInfoComponent.module.css';
 import { useLocation } from 'react-router-dom';
@@ -45,13 +49,30 @@ interface Property {
   value: string;
 }
 
-const icons = {
-  user: IconUserPlus,
+// const icons = {
+//   user: IconUserPlus,
+//   discount: IconDiscount2,
+//   receipt: IconReceipt2,
+//   coin: IconCoin,
+// };
+
+// interface IconProps {
+//   size?: number; // Optional size property
+//   stroke?: number; // Optional stroke property
+//   // Add any other properties that your icons might accept
+// }
+
+type IconKeys = 'cook' | 'discount' | 'receipt' | 'coin' | 'deliver'| 'sad' | 'waste';
+
+const icons  = {
+  cook: IconCooker,
   discount: IconDiscount2,
   receipt: IconReceipt2,
+  deliver: IconBowlSpoon,
   coin: IconCoin,
+  sad: IconMoodSad,
+  waste: IconTrash,
 };
-
 // const properties = [
 //   { title: 'Number of cooked', icon: 'receipt', value: '13,456', diff: 34 },
 //   { title: 'Number of reserved', icon: 'coin', value: '4,145', diff: -13 },
@@ -63,12 +84,12 @@ const icons = {
 // ] as const;
 
 const initialProperties = [[
-  { title: 'Number of cooked', icon: 'receipt', value: '' },
-  { title: 'Number of reserved', icon: 'coin', value: '' },
-  { title: 'Number of daily bought', icon: 'discount', value: '' },
-  { title: 'Number of delivered', icon: 'user', value: '' },
-  { title: 'Number of sookhte', icon: 'user', value: '' },
-  { title: 'Number of wasted', icon: 'user', value: '' },
+  { title: 'Number of cooked', icon: 'cook', value: '' },
+  { title: 'Number of reserved', icon: 'receipt', value: '' },
+  { title: 'Number of daily bought', icon: 'coin', value: '' },
+  { title: 'Number of delivered', icon: 'deliver', value: '' },
+  { title: 'Number of sookhte', icon: 'sad', value: '' },
+  { title: 'Number of wasted', icon: 'waste', value: '' },
 ]];
 
   
@@ -113,12 +134,12 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
     if (!loading && data.length > 0) {
       const newProperties = data.map((food) => {
         return [
-          { title: 'Number of cooked', icon: 'receipt', value: String(food.cooked_no) },
-          { title: 'Number of reserved', icon: 'coin', value: String(food.reserved_no) },
-          { title: 'Number of daily bought', icon: 'discount', value: String(food.bought_daily_no) },
-          { title: 'Number of delivered', icon: 'user', value: String(food.delivered_no) },
-          { title: 'Number of sookhte', icon: 'user', value: String(food.reserved_no + food.bought_daily_no - food.delivered_no) }, // sookhte food
-          { title: 'Number of wasted', icon: 'user', value: String(food.cooked_no - food.delivered_no) }, // wasted food
+          { title: 'Number of cooked', icon: 'cook', value: String(food.cooked_no) },
+          { title: 'Number of reserved', icon: 'receipt', value: String(food.reserved_no) },
+          { title: 'Number of daily bought', icon: 'coin', value: String(food.bought_daily_no) },
+          { title: 'Number of delivered', icon: 'deliver', value: String(food.delivered_no) },
+          { title: 'Number of sookhte', icon: 'sad', value: String(food.reserved_no + food.bought_daily_no - food.delivered_no) }, // sookhte food
+          { title: 'Number of wasted', icon: 'waste', value: String(food.cooked_no - food.delivered_no) }, // wasted food
         ];
       });
       
@@ -144,21 +165,25 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
       const stats = properties.map((property) => {
         return property.map((stat) => {
         // const Icon = icons[stat.icon];
-        const Icon = icons["coin"];
+        // const Icon = icons[stat.icon];
+        const Icon = icons[stat.icon as IconKeys];
         // const DiffIcon = stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight;
 
         return (
           <Paper withBorder p="md" radius="md" key={stat.title}>
+            <Flex direction="column" align="left">
             <Group justify="space-between">
               <Text size="xs" c="dimmed" className={classes.title}>
                 {stat.title}
               </Text>
+              
               <Icon className={classes.icon} size="1.4rem" stroke={1.5} />
             </Group>
 
             <Group align="flex-end" gap="xs" mt={25}>
               <Text className={classes.value}>{stat.value}</Text>
             </Group>
+          </Flex>
           </Paper>
         );
       })
@@ -180,7 +205,8 @@ export function DateInfoComponent(props: DateInfoComponentProps) {
           <div key={index}>
           <Text size="md" c='teal' className={classes.title}>{data[index].food_name} :</Text>     
           <Space h="md"/>
-          <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stat}</SimpleGrid>
+          <SimpleGrid cols={{ base: 1, xs: 2, md: 3 }}>{stat}</SimpleGrid>
+          {/* <SimpleGrid cols={1}>{stat}</SimpleGrid> */}
           <Space h="md"/>
           </div>
         ))
