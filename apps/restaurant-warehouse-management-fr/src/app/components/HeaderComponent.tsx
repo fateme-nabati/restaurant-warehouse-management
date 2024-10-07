@@ -28,6 +28,7 @@ function HeaderComponent(props: HeaderComponentProps) {
     "phone_number": string;
     "password": string;
     "image" : string;
+    "isAdmin" : boolean;
   }
 
   let user: RowData = {
@@ -39,7 +40,8 @@ function HeaderComponent(props: HeaderComponentProps) {
     "birth_date": "",
     "phone_number": "",
     "password": "",
-    "image": ""
+    "image": "",
+    "isAdmin": false,
   };
 
   if (string_user) {

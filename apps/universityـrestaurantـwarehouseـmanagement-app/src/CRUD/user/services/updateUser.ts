@@ -12,7 +12,7 @@ export const updateUser = async (req, res) => {
       [personnel_code, national_code, first_name, last_name, birth_date, phone_number, hashed_password, found_personnel_code],
       (error, results) => {
         if (error) {
-          throw error
+          res.status(500).send('An error occurred while updating the user')
         }
         res.status(200).send(`User modified with personnel code: ${personnel_code}`)
       }
