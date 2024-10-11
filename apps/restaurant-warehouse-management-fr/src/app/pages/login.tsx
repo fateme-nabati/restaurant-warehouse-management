@@ -33,7 +33,7 @@ export function Login() {
   const handleLogin = (values: RowData) => { 
     axios.post('http://localhost:3333/users/login', values)
         .then(res => {
-          console.log(values);
+          // console.log(values);
           console.log("successful login", res.data)
           // localStorage.setItem('userToken', res.data.sessionID)
           // console.log("token: ", JSON.stringify(res.data.cookie))

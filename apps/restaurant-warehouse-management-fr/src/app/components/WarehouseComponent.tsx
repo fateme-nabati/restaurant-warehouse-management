@@ -29,7 +29,7 @@ import classes from './WarehouseComponent.module.css';
 export interface WarehouseComponentProps {}
 
 interface Warehouse {
-  id: string;
+  id: number;
   name: string;
 }
 interface RowData {
@@ -149,8 +149,20 @@ function sortData(
 }
 
 
-export function WarehouseComponent(props: WarehouseComponentProps) {
-  const [warehouse, setWarehouse] = useState<Warehouse>({id: "1", name: "warehouse 1"});
+export function WarehouseComponent(props: WarehouseComponentProps) { 
+  const string_warehouse = localStorage.getItem('warehouse')
+  console.log("string_warehouse", string_warehouse)
+  let found_warehouse : Warehouse = {
+    id: 0,
+    name: ''
+  }
+  if (string_warehouse) {
+    found_warehouse = JSON.parse(string_warehouse)
+  }
+  // console.log("getItem", user)
+  // user.full_name = user.first_name + ' ' + user.last_name;
+  // user.image = 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png';
+  const [warehouse, setWarehouse] = useState<Warehouse>(found_warehouse);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
@@ -172,6 +184,7 @@ export function WarehouseComponent(props: WarehouseComponentProps) {
  
   const getData = async () => { // get items that are in specific warehouse
     setLoading(true);
+    console.log("warehouse in getData: ", warehouse)
     await axios.get(`http://localhost:3333/exist/warehouse/${warehouse.id}`)
         .then(res => {
         

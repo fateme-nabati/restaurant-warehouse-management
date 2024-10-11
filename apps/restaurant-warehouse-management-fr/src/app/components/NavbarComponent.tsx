@@ -21,6 +21,15 @@ export interface NavbarComponentProps {
   activeLabel: string;
 }
 
+interface Warehouse {
+  id: number;
+  name: string;
+}
+
+interface Restaurant {
+  id: number;
+  name: string;
+}
 // const data = [
 //   { link: '/Dashboard', label: 'Dashboard', icon: IconDashboard },
 //   { link: '/Users', label: 'Users', icon: Icon2fa },
@@ -61,13 +70,12 @@ export function NavbarComponent(props: NavbarComponentProps) {
     "phone_number": "",
     "password": "",
     "image": "",
-    "isAdmin": true,
+    "isAdmin": false,
   };
 
   if (string_user) {
     user = JSON.parse(string_user)
   }
-  user.isAdmin = false;
   const setAdminPermission = () => {
     setData([
       { link: '/Dashboard', label: 'Dashboard', icon: IconDashboard },
@@ -78,7 +86,7 @@ export function NavbarComponent(props: NavbarComponentProps) {
       { link: '/Foods', label: 'Foods', icon: IconMeat },
     ])
   }
-  const setWarehouseManagerPermission = () => {
+  const setWarehouseManagerPermission = (warehouse: Warehouse[]) => {
     console.log("We are in setWarehouseManagerPermission function")
     setData([
       { link: '/Dashboard', label: 'Dashboard', icon: IconDashboard },
@@ -86,28 +94,31 @@ export function NavbarComponent(props: NavbarComponentProps) {
       { link: '/Items', label: 'Items', icon: IconPackage },
       // { link: '', label: 'Other Settings', icon: IconSettings },
     ])
+
+    localStorage.setItem('warehouse', JSON.stringify({id: warehouse[0].id, name: warehouse[0].name}));
+    console.log("warehouse", JSON.stringify({id: warehouse[0].id, name: warehouse[0].name}))
   }
-  const setRestaurantManagerPermission = () => {
+  const setRestaurantManagerPermission = (restaurant: Restaurant[]) => {
     console.log("We are in setRestaurantManagerPermission function")
     setData([
       { link: '/Dashboard', label: 'Dashboard', icon: IconDashboard },
       { link: '/Restaurant', label: 'Restaurant', icon: IconBellRinging },
       { link: '/Foods', label: 'Foods', icon: IconMeat },
       // { link: '', label: 'Other Settings', icon: IconSettings },
-    ])
+    ]) 
+    localStorage.setItem('restaurant', JSON.stringify({id: restaurant[0].id, name: restaurant[0].name}));
   }
   const getPermission = () => {
     setLoading(true);
-    console.log("user in get permission: ", user)
-    // console.log(`http://localhost:3333/warehouses/manager/${user.personnel_code}`)
+    console.log("user in get permission: ", user) 
     user.isAdmin ? setAdminPermission() : 
       axios.get(`http://localhost:3333/warehouses/manager/${user.personnel_code}`)
         .then(res =>{
           console.log("get warehouse permission: ", res.data)
-          res.data.length > 0 ? setWarehouseManagerPermission() :  axios.get(`http://localhost:3333/restaurants/manager/${user.personnel_code}`)
+          res.data.length > 0 ? setWarehouseManagerPermission(res.data) :  axios.get(`http://localhost:3333/restaurants/manager/${user.personnel_code}`)
         .then(res =>{
           console.log("get restaurant permission: ", res.data)
-          res.data.length > 0 ? setRestaurantManagerPermission() :  notifications.show({
+          res.data.length > 0 ? setRestaurantManagerPermission(res.data) :  notifications.show({
             withBorder: true,
             title: "Guest useres don't have permission to access site services!",
             message: '', 

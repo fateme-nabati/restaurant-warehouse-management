@@ -12,6 +12,7 @@ export const loginReq = async (req, res) => {
     birth_date;
     phone_number;
     password;
+    is_admin;
   };
 
   await pool.query(

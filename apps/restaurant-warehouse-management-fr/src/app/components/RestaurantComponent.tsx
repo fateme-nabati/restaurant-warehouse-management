@@ -39,7 +39,7 @@ interface RowData {
 }
 
 interface Prepare {
-  restaurant_id: string; 
+  restaurant_id: number; 
   food_id: string; 
   date: Date | null; 
   meal: string | null; 
@@ -50,18 +50,26 @@ interface Prepare {
 }
 
 interface Restaurant {
-  id: string;
+  id: number;
   name: string;
 }
 
-interface Food {
-  id: string;
-  name: string | null;
-}
+// interface Food {
+//   id: string;
+//   name: string | null;
+// }
 
 export function RestaurantComponent(props: RestaurantComponentProps) {
-
-  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant"});
+  const string_restaurant = localStorage.getItem('restaurant')
+  console.log("string_restaurant", string_restaurant)
+  let found_restaurant : Restaurant = {
+      id: 0,
+      name: ''
+  }
+  if (string_restaurant) {
+    found_restaurant = JSON.parse(string_restaurant)
+  }
+  const [restaurant, setRestaurant] = useState <Restaurant> (found_restaurant);
   const [data, setData] = useState<RowData[]> ([])
   // const [dateInfo, setDateInfo] = useState<Prepare[]>([{restaurant_id: "", food_id: "", date: "1970-01-01", meal: "", reserved_no: 0, bought_daily_no: 0, cooked_no: 0, delivered_no: 0}]); 
   const [loading, setLoading] = useState <boolean> (true);

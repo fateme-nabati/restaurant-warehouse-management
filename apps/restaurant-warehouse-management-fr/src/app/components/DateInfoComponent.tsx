@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Group, Paper, SimpleGrid, Text, Loader, Space, Flex } from '@mantine/core';
 import {
-  IconUserPlus,
   IconDiscount2,
   IconReceipt2,
   IconCoin,
-  IconArrowUpRight,
-  IconArrowDownRight,
   IconCooker,
   IconBowlSpoon,
   IconMoodSad,
@@ -19,16 +16,15 @@ import axios from "axios"
 import { notifications } from '@mantine/notifications';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import { title } from 'process';
+
 
 
 /* eslint-disable-next-line */
 export interface DateInfoComponentProps {}
 
 interface Restaurant {
-  id: string;
+  id: number;
   name: string;
-  number_of_staff: number;
 }
 
 interface RowData {
@@ -94,7 +90,17 @@ const initialProperties = [[
 
   
 export function DateInfoComponent(props: DateInfoComponentProps) {
-  const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant", number_of_staff: 20});
+  const string_restaurant = localStorage.getItem('restaurant')
+  console.log("string_restaurant", string_restaurant)
+  let found_restaurant : Restaurant = {
+      id: 0,
+      name: ''
+  }
+  if (string_restaurant) {
+    found_restaurant = JSON.parse(string_restaurant)
+  }
+  const [restaurant, setRestaurant] = useState <Restaurant> (found_restaurant);
+  // const [restaurant, setRestaurant] = useState <Restaurant> ({id: "1", name: "centeral restaurant", number_of_staff: 20});
   const [data, setData] = useState<RowData[]> ([])
   const [loading, setLoading] = useState <boolean> (true);
   const [properties, setProperties] = useState<Property[][]>(initialProperties)

@@ -8,12 +8,12 @@ import classes from './HeaderComponent.module.css';
 /* eslint-disable-next-line */
 export interface HeaderComponentProps {}
 
-const links = [
-  { link: '/items', label: 'Warehouse Items' },
-  { link: '/foods', label: 'Foods' },
-  { link: '/restaurant', label: 'Restaurant' },
-  { link: '/reports', label: 'Reports' },
-];
+// const links = [
+//   { link: '/items', label: 'Warehouse Items' },
+//   { link: '/foods', label: 'Foods' },
+//   { link: '/restaurant', label: 'Restaurant' },
+//   { link: '/reports', label: 'Reports' },
+// ];
 
 function HeaderComponent(props: HeaderComponentProps) {
   const string_user = localStorage.getItem('user')
@@ -62,16 +62,16 @@ function HeaderComponent(props: HeaderComponentProps) {
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
-  const items = links.map((link) => (
-    <a
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-      onClick={(event) => event.preventDefault()}
-    >
-      {link.label}
-    </a>
-  ));
+  // const items = links.map((link) => (
+  //   <a
+  //     key={link.label}
+  //     href={link.link}
+  //     className={classes.link}
+  //     onClick={(event) => event.preventDefault()}
+  //   >
+  //     {link.label}
+  //   </a>
+  // ));
 
   return (
     <AppShell.Header className={classes.header}>
@@ -86,22 +86,22 @@ function HeaderComponent(props: HeaderComponentProps) {
                   <Text 
                   variant='gradient'
                   gradient={{from: "#008080", to: "pink", deg:250}} visibleFrom="xs">
-                    restaurant warehouse management
+                    restaurant warehouse management system
                   </Text>
         </Group>
 
-        <Group>
+        {/* <Group>
           <Group ml={50} gap={5} className={classes.links} visibleFrom="md">
             {items}
-          </Group>
-          <Autocomplete
+          </Group> */}
+          {/* <Autocomplete
             className={classes.search}
             placeholder="Search"
-            leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
+            leftSection={<IconSearch style={{ width: rem(26), height: rem(16) }} stroke={1.5} />}
             data={['React', 'Angular', 'Vue', 'Next.js', 'Riot.js', 'Svelte', 'Blitz.js']}
             visibleFrom="lg"
-          />
-        </Group>
+          /> */}
+        {/* </Group> */}
         <Menu
             width={260}
             position="bottom-end"
@@ -114,16 +114,16 @@ function HeaderComponent(props: HeaderComponentProps) {
               <UnstyledButton
                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
               >
-        <Group gap={7}>
+          <Group gap={7}>
             <Avatar src={user.image} alt={user.full_name} radius="xl" size={20} />
             <Text fw={500} size="sm" lh={1} mr={3}>
               {user.full_name}
             </Text>
-            <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+            {/* <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} /> */}
             </Group>
             </UnstyledButton>
             </Menu.Target>
-            <Menu.Dropdown>
+            {/* <Menu.Dropdown>
               <Menu.Item
                 leftSection={
                   <IconHeart
@@ -135,7 +135,7 @@ function HeaderComponent(props: HeaderComponentProps) {
               >
                 Liked posts
               </Menu.Item>
-            </Menu.Dropdown>
+            </Menu.Dropdown> */}
           </Menu>
       </div>
     </AppShell.Header>
