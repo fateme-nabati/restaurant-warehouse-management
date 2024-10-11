@@ -9,6 +9,7 @@ import {
   IconSwitchHorizontal,
   IconLogout,
   IconDashboard,
+  IconChartArcs,
 } from '@tabler/icons-react';
 import { Link} from 'react-router-dom';
 import axios from "axios"
@@ -84,6 +85,7 @@ export function NavbarComponent(props: NavbarComponentProps) {
       { link: '/Restaurant', label: 'Restaurant', icon: IconBellRinging },
       { link: '/Items', label: 'Items', icon: IconPackage },
       { link: '/Foods', label: 'Foods', icon: IconMeat },
+      { link: '/Report', label: 'Report', icon: IconChartArcs },
     ])
   }
   const setWarehouseManagerPermission = (warehouse: Warehouse[]) => {
@@ -104,6 +106,7 @@ export function NavbarComponent(props: NavbarComponentProps) {
       { link: '/Dashboard', label: 'Dashboard', icon: IconDashboard },
       { link: '/Restaurant', label: 'Restaurant', icon: IconBellRinging },
       { link: '/Foods', label: 'Foods', icon: IconMeat },
+      { link: '/Report', label: 'Report', icon: IconChartArcs },
       // { link: '', label: 'Other Settings', icon: IconSettings },
     ]) 
     localStorage.setItem('restaurant', JSON.stringify({id: restaurant[0].id, name: restaurant[0].name}));

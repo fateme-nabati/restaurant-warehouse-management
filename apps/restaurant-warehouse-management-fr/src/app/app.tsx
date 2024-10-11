@@ -12,6 +12,7 @@ import { Warehouse } from './pages/warehouse';
 import { Foods } from './pages/foods'
 import { Restaurant } from './pages/restaurant'
 import { DateInfo } from './pages/dateInfo';
+import { Report } from './pages/report';
 import { Route, Routes} from 'react-router-dom';
 
 export function App() {
@@ -27,6 +28,7 @@ export function App() {
           <Route path="/Foods" element={<Foods />} />
           <Route path="/Restaurant" element={<Restaurant />} />
           <Route path="/DateInfo" element={<DateInfo />} />
+          <Route path="/Report" element={<Report />} />
         </Routes>
      
        
